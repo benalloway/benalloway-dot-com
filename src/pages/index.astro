@@ -4,11 +4,9 @@ import Base from '../layouts/Base.astro';
 import Container from '../components/ui/Container.astro';
 import AnnouncementBadge from '../components/ui/AnnouncementBadge.astro';
 import Heading from '../components/ui/Heading.astro';
-import Subheading from '../components/ui/Subheading.astro';
 import Eyebrow from '../components/ui/Eyebrow.astro';
 import Text from '../components/ui/Text.astro';
 import Button from '../components/ui/Button.astro';
-import Card from '../components/ui/Card.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import MovieShelfCard from '../components/MovieShelfCard.astro';
 import { getAllMovies } from '../data/movies';
@@ -124,24 +122,9 @@ const photos = [
         </div>
       </div>
 
-      <!-- Right Column: Movie Database Shelf Snapshot + Sister App Card -->
-      <div class="space-y-8 lg:pl-16 xl:pl-24">
+      <!-- Right Column: Movie Database Shelf Snapshot -->
+      <div class="lg:pl-16 xl:pl-24">
         <MovieShelfCard movies={movies} />
-
-        <Card as="section" variant="surface" padding="md">
-          <Subheading level={2} variant="sans">
-            More on benalloway.com
-          </Subheading>
-          <Text size="sm" class="mt-2">
-            Looking for our family cookbook and capsule meal planner? It lives
-            right here on this site:
-          </Text>
-          <div class="mt-4">
-            <Button href="/recipes/" variant="secondary" size="lg" class="w-full">
-              Open Recipes →
-            </Button>
-          </div>
-        </Card>
       </div>
     </div>
   </Container>
