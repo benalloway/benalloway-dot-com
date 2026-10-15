@@ -19,8 +19,7 @@ badges/buttons/description-lists with MD3 mobile touch targets (`min-h-11` /
 `movie-filter.ts`); shipped About home page (`/`), Plex-portable movie
 collection (`/movies`, `/movies/[slug]`, `/api/movies.json`), Markdown wiki &
 articles (`/articles`, `/articles/favorite-movies`,
-`/articles/how-this-wiki-works`), and `/api/health`. Custom domain
-`benalloway.com` attached.
+`/articles/how-this-wiki-works`), and `/api/health`. Custom domains `benalloway.com` and `www.benalloway.com` attached; Cloudflare zone `always_use_https` enabled (301 HTTP → HTTPS redirect).
 
 Verify: `npm run check` + `npm run build` green; `curl -s https://benalloway.com/api/health` → `{"ok":true,...}`; `/`, `/movies`, `/movies/the-fellowship-of-the-ring`, `/articles`, `/articles/favorite-movies`, and `/api/movies.json` all return 200.
 

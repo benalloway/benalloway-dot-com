@@ -12,7 +12,8 @@
     { "binding": "SESSION", "id": "c5ef636441994c10ba7dd87ad8d224eb" }
   ],
   "routes": [
-    { "pattern": "benalloway.com", "custom_domain": true }
+    { "pattern": "benalloway.com", "custom_domain": true },
+    { "pattern": "www.benalloway.com", "custom_domain": true }
   ],
   "workers_dev": false,
   "preview_urls": false,

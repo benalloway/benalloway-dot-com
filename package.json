@@ -6,7 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "wrangler dev",
-    "deploy": "npm run build && wrangler deploy -c dist/server/wrangler.json --domain benalloway.com",
+    "deploy": "npm run build && wrangler deploy -c dist/server/wrangler.json --domain benalloway.com --domain www.benalloway.com",
     "check": "astro sync && tsc --noEmit",
     "typecheck": "astro sync && tsc --noEmit",
     "test": "astro build",
