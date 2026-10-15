@@ -1,0 +1,94 @@
+---
+import Container from './Container.astro';
+import Badge from './Badge.astro';
+import { formatDate } from '../lib/formatDate';
+
+interface Props {
+  title: string;
+  description: string;
+  publishedAt: string;
+  updatedAt?: string;
+  category: string;
+  tags?: string[];
+  backHref?: string;
+  backLabel?: string;
+}
+
+const {
+  title,
+  description,
+  publishedAt,
+  updatedAt,
+  category,
+  tags = [],
+  backHref = '/articles',
+  backLabel = 'Back to all pages & articles',
+} = Astro.props;
+---
+
+<Container class="mt-12 lg:mt-24">
+  <div class="xl:relative">
+    <div class="mx-auto max-w-2xl">
+      <a
+        href={backHref}
+        aria-label={backLabel}
+        class="group relative mb-8 inline-flex size-11 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 transition lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20"
+      >
+        <span
+          class="absolute top-1/2 left-1/2 size-[max(100%,3rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
+          aria-hidden="true"></span>
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          class="size-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"
+        >
+          <path
+            d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+      </a>
+
+      <article>
+        <header class="flex flex-col">
+          <div class="order-first flex flex-wrap items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
+            <time datetime={publishedAt} class="flex items-center">
+              <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" aria-hidden="true"></span>
+              <span class="ml-3">{formatDate(publishedAt)}</span>
+            </time>
+            {
+              updatedAt && updatedAt !== publishedAt && (
+                <span>· Updated {formatDate(updatedAt)}</span>
+              )
+            }
+            <Badge color="teal">{category}</Badge>
+          </div>
+
+          <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+            {title}
+          </h1>
+
+          <p class="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+            {description}
+          </p>
+
+          {
+            tags.length > 0 && (
+              <div class="mt-5 flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <Badge color="zinc">#{tag}</Badge>
+                ))}
+              </div>
+            )
+          }
+        </header>
+
+        <div class="prose-spotlight mt-10">
+          <slot />
+        </div>
+      </article>
+    </div>
+  </div>
+</Container>

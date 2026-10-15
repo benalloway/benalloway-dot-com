@@ -1,0 +1,33 @@
+---
+import Container from './Container.astro';
+
+interface Props {
+  title: string;
+  intro: string;
+  eyebrow?: string;
+}
+
+const { title, intro, eyebrow } = Astro.props;
+---
+
+<Container class="mt-12 sm:mt-24">
+  <header class="max-w-2xl">
+    {
+      eyebrow && (
+        <p class="mb-3 flex items-center text-xs font-semibold tracking-wider text-teal-600 uppercase dark:text-teal-400">
+          <span class="mr-3 h-4 w-0.5 rounded-full bg-teal-500 dark:bg-teal-400" aria-hidden="true" />
+          {eyebrow}
+        </p>
+      )
+    }
+    <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+      {title}
+    </h1>
+    <p class="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+      {intro}
+    </p>
+  </header>
+  <div class="mt-12 sm:mt-16">
+    <slot />
+  </div>
+</Container>

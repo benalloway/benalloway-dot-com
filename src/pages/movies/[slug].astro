@@ -1,0 +1,251 @@
+---
+import Base from '../../layouts/Base.astro';
+import Container from '../../components/Container.astro';
+import Badge from '../../components/Badge.astro';
+import Button from '../../components/Button.astro';
+import {
+  getMovieBySlug,
+  formatRuntime,
+  getExternalId,
+  toPlexMetadata,
+} from '../../data/movies';
+
+const { slug } = Astro.params;
+const movie = slug ? getMovieBySlug(slug) : undefined;
+
+if (!movie) {
+  return new Response('Movie not found', { status: 404 });
+}
+
+const imdbId = getExternalId(movie, 'imdb');
+const tmdbId = getExternalId(movie, 'tmdb');
+const plexRecord = toPlexMetadata(movie);
+---
+
+<Base
+  title={`${movie.title} (${movie.year})`}
+  description={`${movie.title} (${movie.year}) — ${movie.mediaFormat} edition in Ben Alloway's movie library.`}
+>
+  <Container class="mt-12 lg:mt-24">
+    <div class="mx-auto max-w-3xl">
+      <a
+        href="/movies"
+        class="group relative mb-8 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-zinc-600 transition hover:text-teal-600 dark:text-zinc-400 dark:hover:text-teal-400"
+      >
+        <svg
+          viewBox="0 0 16 16"
+          fill="none"
+          aria-hidden="true"
+          class="size-4 stroke-current"
+        >
+          <path
+            d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"></path>
+        </svg>
+        Back to Movies We Own
+      </a>
+
+      <!-- Hero Banner Card -->
+      <div
+        class:list={[
+          'rounded-3xl bg-linear-to-br p-6 text-white shadow-lg sm:p-10',
+          movie.posterAccent,
+        ]}
+      >
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="rounded-md bg-white/15 px-2.5 py-1 text-xs font-semibold tracking-wide uppercase backdrop-blur-xs">
+            {movie.mediaFormat}
+          </span>
+          {
+            movie.editionTitle && (
+              <span class="rounded-md bg-teal-400/20 px-2.5 py-1 text-xs font-semibold text-teal-200 backdrop-blur-xs">
+                {movie.editionTitle}
+              </span>
+            )
+          }
+          <span class="rounded-md bg-black/30 px-2.5 py-1 text-xs font-medium text-zinc-200">
+            {movie.contentRating}
+          </span>
+          <span class="rounded-md bg-black/30 px-2.5 py-1 text-xs font-medium text-zinc-200">
+            {formatRuntime(movie.duration)}
+          </span>
+          {
+            movie.userRating && (
+              <span class="ml-auto rounded-md bg-black/40 px-2.5 py-1 text-xs font-semibold text-amber-300">
+                ★ {movie.userRating.toFixed(1)} / 10
+              </span>
+            )
+          }
+        </div>
+
+        <h1 class="mt-6 text-3xl font-bold tracking-tight text-white sm:text-5xl">
+          {movie.title}
+        </h1>
+
+        {
+          movie.originalTitle && (
+            <p class="mt-1 text-sm text-zinc-300">
+              Original title: {movie.originalTitle}
+            </p>
+          )
+        }
+
+        {
+          movie.tagline && (
+            <p class="mt-3 text-base italic text-zinc-200">
+              “{movie.tagline}”
+            </p>
+          )
+        }
+
+        <p class="mt-4 max-w-2xl text-sm/6 text-zinc-100/90 sm:text-base/7">
+          {movie.summary}
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          {
+            movie.genres.map((genre) => (
+              <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white">
+                {genre}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      {
+        movie.notes && (
+          <div class="mt-8 rounded-2xl border border-teal-500/20 bg-teal-500/5 p-5 dark:border-teal-400/20 dark:bg-teal-400/5">
+            <p class="text-xs font-semibold tracking-wider text-teal-700 uppercase dark:text-teal-300">
+              Shelf & Edition Note
+            </p>
+            <p class="mt-1.5 text-sm text-zinc-700 dark:text-zinc-300">
+              {movie.notes}
+            </p>
+          </div>
+        )
+      }
+
+      <!-- Catalyst DescriptionList for Plex & Physical Media Metadata -->
+      <section class="mt-10">
+        <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          Plex & Physical Media Metadata
+        </h2>
+        <dl class="mt-4 grid grid-cols-1 text-base/6 sm:grid-cols-[min(40%,16rem)_auto] sm:text-sm/6">
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 first:border-none sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Sort Title (<code class="font-mono text-xs">sortTitle</code>)
+          </dt>
+          <dd class="pt-1 pb-3 font-mono text-sm text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 sm:nth-2:border-none dark:text-white dark:sm:border-white/5">
+            {movie.sortTitle}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Director(s)
+          </dt>
+          <dd class="pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:text-white dark:sm:border-white/5">
+            {movie.directors.join(', ')}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Writer(s)
+          </dt>
+          <dd class="pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:text-white dark:sm:border-white/5">
+            {movie.writers.join(', ') || '—'}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Studio
+          </dt>
+          <dd class="pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:text-white dark:sm:border-white/5">
+            {movie.studio}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Video Transfer
+          </dt>
+          <dd class="pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:text-white dark:sm:border-white/5">
+            {movie.videoSpec ?? movie.mediaFormat}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Audio Track
+          </dt>
+          <dd class="pt-1 pb-3 text-zinc-950 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:text-white dark:sm:border-white/5">
+            {movie.audioSpec ?? 'Standard'}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            Plex Agent GUIDs
+          </dt>
+          <dd class="flex flex-wrap gap-2 pt-1 pb-3 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:sm:border-white/5">
+            {movie.guids.map((g) => <Badge color="zinc">{g.id}</Badge>)}
+          </dd>
+
+          <dt class="col-start-1 border-t border-zinc-950/5 pt-3 text-zinc-500 sm:py-3 dark:border-white/5 dark:text-zinc-400">
+            External Links
+          </dt>
+          <dd class="flex flex-wrap gap-3 pt-1 pb-3 sm:border-t sm:border-zinc-950/5 sm:py-3 dark:sm:border-white/5">
+            {
+              imdbId && (
+                <Button
+                  href={`https://www.imdb.com/title/${imdbId}/`}
+                  variant="secondary"
+                >
+                  IMDb ({imdbId}) ↗
+                </Button>
+              )
+            }
+            {
+              tmdbId && (
+                <Button
+                  href={`https://www.themoviedb.org/movie/${tmdbId}`}
+                  variant="secondary"
+                >
+                  TMDb ({tmdbId}) ↗
+                </Button>
+              )
+            }
+          </dd>
+        </dl>
+      </section>
+
+      <!-- Principal Cast -->
+      {
+        movie.cast.length > 0 && (
+          <section class="mt-10">
+            <h2 class="text-lg font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+              Principal Cast
+            </h2>
+            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              {movie.cast.map((actor) => (
+                <div class="flex items-center justify-between rounded-xl border border-zinc-100 px-4 py-3 dark:border-zinc-800">
+                  <span class="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    {actor.name}
+                  </span>
+                  <span class="text-xs text-zinc-500 dark:text-zinc-400">
+                    as {actor.role}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <!-- Portable Plex Metadata JSON Preview -->
+      <section class="mt-10">
+        <details class="group rounded-2xl border border-zinc-100 bg-zinc-50/60 p-4 dark:border-zinc-800 dark:bg-zinc-800/30">
+          <summary class="flex min-h-11 cursor-pointer items-center justify-between text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+            <span>Portable Plex Metadata JSON Record</span>
+            <span class="text-xs font-normal text-teal-600 dark:text-teal-400">
+              Toggle JSON
+            </span>
+          </summary>
+          <pre class="mt-4 overflow-x-auto rounded-xl bg-zinc-900 p-4 font-mono text-xs text-zinc-100">{JSON.stringify(plexRecord, null, 2)}</pre>
+        </details>
+      </section>
+    </div>
+  </Container>
+</Base>

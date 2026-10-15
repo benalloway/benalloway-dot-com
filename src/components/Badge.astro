@@ -1,0 +1,32 @@
+---
+/**
+ * Catalyst UI Kit Badge — ported 1:1 to Astro.
+ */
+const colors = {
+  teal: 'bg-teal-500/15 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300',
+  zinc: 'bg-zinc-600/10 text-zinc-700 dark:bg-white/5 dark:text-zinc-400',
+  amber: 'bg-amber-400/20 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
+  indigo: 'bg-indigo-500/15 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400',
+  emerald: 'bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
+  sky: 'bg-sky-500/15 text-sky-700 dark:bg-sky-500/10 dark:text-sky-300',
+  rose: 'bg-rose-400/15 text-rose-700 dark:bg-rose-400/10 dark:text-rose-400',
+  purple: 'bg-purple-500/15 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400',
+} as const;
+
+interface Props {
+  color?: keyof typeof colors;
+  class?: string;
+}
+
+const { color = 'zinc', class: className = '' } = Astro.props;
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-x-1.5 rounded-md px-2 py-0.5 text-xs/5 font-medium forced-colors:outline',
+    colors[color],
+    className,
+  ]}
+>
+  <slot />
+</span>

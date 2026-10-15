@@ -1,0 +1,49 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import SimpleLayout from '../../components/SimpleLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { formatDate } from '../../lib/formatDate';
+
+const entries = (await getCollection('articles')).sort((a, b) =>
+  b.data.publishedAt.localeCompare(a.data.publishedAt),
+);
+---
+
+<Base
+  title="Wiki & Articles"
+  description="Articles, curated movie lists, wiki notes, and life updates by Ben Alloway."
+>
+  <SimpleLayout
+    eyebrow="Wiki · Lists · Notes"
+    title="Pages, movie lists, and notes."
+    intro="Long-form lists, wiki reference pages, film essays, and occasional life updates — authored in Markdown and organized chronologically."
+  >
+    <div class="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
+      <div class="flex max-w-3xl flex-col space-y-16">
+        {
+          entries.map((entry) => (
+            <div class="md:grid md:grid-cols-4 md:items-baseline">
+              <div class="md:col-span-3">
+                <ArticleCard
+                  title={entry.data.title}
+                  href={`/articles/${entry.id}`}
+                  description={entry.data.description}
+                  publishedAt={entry.data.publishedAt}
+                  category={entry.data.category}
+                  cta="Read article"
+                />
+              </div>
+              <time
+                datetime={entry.data.publishedAt}
+                class="relative z-10 order-first mt-1 mb-3 hidden items-center text-sm text-zinc-400 md:flex dark:text-zinc-500"
+              >
+                {formatDate(entry.data.publishedAt)}
+              </time>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </SimpleLayout>
+</Base>
