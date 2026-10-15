@@ -1,4 +1,8 @@
 ---
+import Container from './ui/Container.astro';
+import Divider from './ui/Divider.astro';
+import Text from './ui/Text.astro';
+
 const year = new Date().getFullYear();
 
 const links = [
@@ -8,25 +12,24 @@ const links = [
 ---
 
 <footer class="mt-24 flex-none sm:mt-32">
-  <div class="mx-auto w-full max-w-2xl px-6 md:max-w-3xl lg:max-w-7xl lg:px-10">
-    <div class="border-t border-olive-950/10 pt-10 pb-16 dark:border-white/10">
-      <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
-        <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm/7 font-medium text-olive-950 dark:text-white">
-          {
-            links.map((link) => (
-              <a
-                href={link.href}
-                class="inline-flex min-h-11 items-center transition hover:opacity-60"
-              >
-                {link.label}
-              </a>
-            ))
-          }
-        </div>
-        <p class="text-sm/7 text-olive-700 dark:text-olive-400">
-          &copy; {year} Ben Alloway. All rights reserved.
-        </p>
+  <Container>
+    <Divider />
+    <div class="flex flex-col items-center justify-between gap-6 pt-10 pb-16 md:flex-row">
+      <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm/7 font-medium text-olive-950 dark:text-white">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              class="inline-flex min-h-11 items-center transition hover:opacity-60"
+            >
+              {link.label}
+            </a>
+          ))
+        }
       </div>
+      <Text size="sm">
+        &copy; {year} Ben Alloway. All rights reserved.
+      </Text>
     </div>
-  </div>
+  </Container>
 </footer>

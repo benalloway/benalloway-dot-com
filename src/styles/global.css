@@ -1,6 +1,6 @@
-/* Tailwind CSS v4 — Oatmeal olive-instrument visuals + Catalyst + MD3 ergonomics.
-   CSS-first @theme tokens, class-based dark mode (.dark). Layouts/IA unchanged;
-   only the visual language (palette, type, pills, tonal surfaces) follows Oatmeal. */
+/* @benalloway/ui — Oatmeal olive-instrument tokens + olive prose.
+   Source of truth for benalloway.com apps. Vendored (copied) into each app;
+   edit here, bump the version, and re-vendor. */
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));

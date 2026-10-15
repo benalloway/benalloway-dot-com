@@ -1,0 +1,107 @@
+---
+import Badge from './ui/Badge.astro';
+import Heading from './ui/Heading.astro';
+import Text from './ui/Text.astro';
+import { formatRuntime, type Movie } from '../data/movies';
+
+/**
+ * Reusable movie poster / edition header artwork block.
+ * - `variant="card"`: compact header for catalog cards on `/movies`
+ * - `variant="hero"`: full edition showcase banner on `/movies/[slug]`
+ */
+interface Props {
+  movie: Movie;
+  variant?: 'card' | 'hero';
+  class?: string;
+}
+
+const { movie, variant = 'card', class: className = '' } = Astro.props;
+---
+
+{
+  variant === 'card' ? (
+    <div
+      class:list={[
+        'relative mb-4 flex h-32 flex-col justify-between rounded-xl bg-linear-to-br p-4 text-white inset-ring-1 inset-ring-white/15',
+        movie.posterAccent,
+        className,
+      ]}
+    >
+      <div class="flex items-center justify-between gap-2">
+        <Badge color="overlay" size="sm" class="font-semibold tracking-wide">
+          {movie.mediaFormat}
+        </Badge>
+        {movie.userRating && (
+          <Badge color="overlay-amber" size="sm" class="font-semibold">
+            ★ {movie.userRating.toFixed(1)}
+          </Badge>
+        )}
+      </div>
+
+      <div class="flex items-baseline justify-between gap-2 text-xs/5 text-white/85">
+        <span class="font-mono">{movie.year}</span>
+        <span>
+          {movie.contentRating} · {formatRuntime(movie.duration)}
+        </span>
+      </div>
+    </div>
+  ) : (
+    <div
+      class:list={[
+        'rounded-3xl bg-linear-to-br p-6 text-white shadow-lg inset-ring-1 inset-ring-white/15 sm:p-10',
+        movie.posterAccent,
+        className,
+      ]}
+    >
+      <div class="flex flex-wrap items-center gap-2">
+        <Badge color="overlay-soft" size="sm" class="font-semibold tracking-wide uppercase">
+          {movie.mediaFormat}
+        </Badge>
+        {movie.editionTitle && (
+          <Badge color="overlay-soft" size="sm" class="font-semibold">
+            {movie.editionTitle}
+          </Badge>
+        )}
+        <Badge color="overlay" size="sm">
+          {movie.contentRating}
+        </Badge>
+        <Badge color="overlay" size="sm">
+          {formatRuntime(movie.duration)}
+        </Badge>
+        {movie.userRating && (
+          <Badge color="overlay-amber" size="sm" class="ml-auto font-semibold">
+            ★ {movie.userRating.toFixed(1)} / 10
+          </Badge>
+        )}
+      </div>
+
+      <Heading level={1} size="xl" color="light" class="mt-6">
+        {movie.title}
+      </Heading>
+
+      {movie.originalTitle && (
+        <Text size="sm" variant="light" class="mt-1 opacity-80">
+          Original title: {movie.originalTitle}
+        </Text>
+      )}
+
+      {movie.tagline && (
+        <p class="mt-3 font-display text-xl/7 text-white/90 italic">
+          “{movie.tagline}”
+        </p>
+      )}
+
+      <Text size="md" variant="light" class="mt-4 max-w-2xl">
+        {movie.summary}
+      </Text>
+
+      <div class="mt-6 flex flex-wrap gap-2">
+        {movie.genres.map((genre) => (
+          <Badge color="overlay-soft" size="sm">
+            {genre}
+          </Badge>
+        ))}
+      </div>
+    </div>
+  )
+}

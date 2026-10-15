@@ -23,12 +23,17 @@ Elements runtime):
   `--font-display: 'Instrument Serif'`, `--font-sans: 'Inter'`;
   page base `bg-olive-100 dark:bg-olive-950`; prose recolored to
   `text-olive-700 / headings olive-950` (dark: `olive-400 / white`).
-- **Elements** (from Oatmeal `components/elements/`): `Container`
-  (`max-w-2xl → 3xl → 7xl`), sticky `bg-olive-100` navbar with centered text
-  links + rounded-full icon buttons, `Button`/`SoftButton`/`PlainButton`
-  rounded-full pills, `Eyebrow` (`text-olive-700`), `Heading`/`Subheading`
-  (`font-display`), `AnnouncementBadge`-style tonal pills, full-screen olive
-  mobile menu panel.
+- **Centralized UI Kit (`@benalloway/ui` → `src/components/ui/`):** All
+  typography (`Heading`, `Subheading`, `Eyebrow`, `Text`, `Link`, `Code`),
+  buttons (`Button`), badges (`Badge`, `AnnouncementBadge`), surfaces (`Card`,
+  `Divider`, `Stat`, `Disclosure`, `EmptyState`), metadata lists
+  (`DescriptionList`, `DescriptionTerm`, `DescriptionDetails`), and Ecommerce
+  catalog/filter controls (`FilterChip`, `TextInput`, `SelectInput`, `PageHeader`,
+  `Container`, `Section`) live in `@benalloway/ui` (`../ui`) and are vendored into
+  `src/components/ui/` and `src/styles/global.css` via `scripts/sync-ui.sh`.
+  App-level compositions (`MovieCard`, `MovieArtwork`, `MovieShelfCard`,
+  `ArticleCard`, `ArticleLayout`, `SimpleLayout`, `Header`, `Footer`) compose
+  these primitives so design standards are set and adjusted in one place.
 - **Nav IA (reduced):** header + footer expose exactly two sections —
   `Movies` (`/movies`) and `Articles` (`/articles`). The `Ben Alloway`
   wordmark links home (`/`); the favorite-movies essay remains reachable via

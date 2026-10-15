@@ -7,10 +7,18 @@
 
 - Astro 7 SSR + `@astrojs/cloudflare`. Zero client framework — interactive bits
   are plain TS islands, everything else server-rendered HTML.
-- Tailwind CSS v4 (`@tailwindcss/vite`) with Oatmeal's olive palette
-  (`--color-olive-50…950`), Instrument Serif display + Inter sans,
-  class-based dark mode (`.dark`), and olive `.prose-spotlight` typography in
-  `src/styles/global.css`.
+- Tailwind CSS v4 (`@tailwindcss/vite`) with `@benalloway/ui` vendored into
+  `src/components/ui/` and `src/styles/global.css` (`scripts/sync-ui.sh` +
+  `scripts/ui-version.txt`): Oatmeal's olive palette (`--color-olive-50…950`),
+  Instrument Serif display + Inter sans, class-based dark mode (`.dark`), and
+  `.prose-oatmeal` / `.prose-spotlight` typography.
+- **Single source of truth for UI primitives:** All typography (`Heading`,
+  `Subheading`, `Eyebrow`, `Text`, `Link`, `Code`), buttons (`Button`), badges
+  (`Badge`, `AnnouncementBadge`), surfaces (`Card`, `Divider`, `EmptyState`,
+  `Stat`, `Disclosure`), metadata lists (`DescriptionList`, `DescriptionTerm`,
+  `DescriptionDetails`), and filter/form controls (`FilterChip`, `TextInput`,
+  `SelectInput`, `Field`) must import from `src/components/ui/`. Do not inline
+  ad-hoc button, heading, text, or input class strings in pages.
 - Nav IA is exactly two items: `Movies` (`/movies`) + `Articles` (`/articles`).
 - Mobile ergonomics (MD3 + Catalyst): every interactive control, nav link, and
   filter chip must maintain a comfortable touch target (`min-h-11` / `min-h-12`

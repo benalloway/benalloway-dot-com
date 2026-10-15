@@ -1,10 +1,16 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Container from '../components/Container.astro';
+import Container from '../components/ui/Container.astro';
+import AnnouncementBadge from '../components/ui/AnnouncementBadge.astro';
+import Heading from '../components/ui/Heading.astro';
+import Subheading from '../components/ui/Subheading.astro';
+import Eyebrow from '../components/ui/Eyebrow.astro';
+import Text from '../components/ui/Text.astro';
+import Button from '../components/ui/Button.astro';
+import Card from '../components/ui/Card.astro';
 import ArticleCard from '../components/ArticleCard.astro';
-import Badge from '../components/Badge.astro';
-import Button from '../components/Button.astro';
+import MovieShelfCard from '../components/MovieShelfCard.astro';
 import { getAllMovies } from '../data/movies';
 
 const articles = (await getCollection('articles')).sort((a, b) =>
@@ -12,9 +18,6 @@ const articles = (await getCollection('articles')).sort((a, b) =>
 );
 
 const movies = getAllMovies();
-const uhdCount = movies.filter((m) => m.mediaFormat === '4K UHD').length;
-const blurayCount = movies.filter((m) => m.mediaFormat === 'Blu-ray').length;
-const spotlightMovies = movies.filter((m) => m.isFavorite).slice(0, 5);
 
 const photos = [
   { src: '/images/photos/image-1.jpg', alt: 'Photo placeholder 1', rotate: 'rotate-2' },
@@ -29,21 +32,21 @@ const photos = [
   title="Home"
   description="Ben Alloway — personal wiki, physical movie collection, favorite films, and notes."
 >
-  <!-- Hero / About Section (Oatmeal hero-left-aligned visuals) -->
+  <!-- Hero / About Section (Oatmeal hero-left-aligned) -->
   <Container class="mt-10 sm:mt-16">
     <div class="max-w-2xl">
-      <div class="mb-4 inline-flex max-w-full items-center rounded-full bg-olive-950/5 px-3 py-0.5 text-sm/6 font-medium text-olive-950 dark:bg-white/5 dark:text-white">
-        <span>Personal Wiki & Digital Shelf</span>
-      </div>
-      <h1 class="font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-[5rem]/20 dark:text-white">
+      <AnnouncementBadge text="Personal Wiki & Digital Shelf" class="mb-4" />
+
+      <Heading level={1} size="display">
         Hi, I’m Ben Alloway. Welcome to my corner of the web.
-      </h1>
-      <div class="mt-6 max-w-2xl text-base/7 text-pretty text-olive-700 sm:text-lg/8 dark:text-olive-400">
+      </Heading>
+
+      <Text as="div" size="lg" class="mt-6 max-w-2xl text-pretty">
         I’m a software builder based in Virginia. This site is my personal wiki
         and living notebook — a place to catalog the physical movies we own
         (structured for our future Plex server), share ranked lists like my
         all-time favorite films, and publish notes and life updates along the way.
-      </div>
+      </Text>
 
       <!-- Primary Mobile-Friendly Quick-Start Menu Actions (MD3 48px+ touch targets) -->
       <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -53,27 +56,28 @@ const photos = [
         <Button href="/articles/favorite-movies" variant="secondary" size="lg">
           Read: My Top 20 Favorite Movies
         </Button>
-        <a
+        <Button
           href="https://github.com/benalloway"
+          variant="plain"
+          size="md"
           target="_blank"
           rel="noreferrer"
           aria-label="Ben Alloway on GitHub"
-          class="inline-flex min-h-11 items-center gap-2 rounded-full px-3 py-1 text-sm/7 font-medium text-olive-950 transition hover:bg-olive-950/10 dark:text-white dark:hover:bg-white/10"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 fill-current">
             <path
               fill-rule="evenodd"
               clip-rule="evenodd"
               d="M12 2C6.475 2 2 6.588 2 12.253c0 4.537 2.862 8.369 6.838 9.727.5.09.687-.218.687-.487 0-.24-.013-1.05-.013-1.91C7 20.059 6.35 18.957 6.15 18.38c-.113-.295-.6-1.205-1.025-1.448-.35-.192-.85-.667-.013-.68.788-.012 1.35.744 1.538 1.051.9 1.551 2.338 1.116 2.912.846.088-.666.35-1.115.638-1.371-2.225-.256-4.55-1.14-4.55-5.062 0-1.115.387-2.038 1.025-2.756-.1-.256-.45-1.307.1-2.717 0 0 .837-.269 2.75 1.051.8-.23 1.65-.346 2.5-.346.85 0 1.7.115 2.5.346 1.912-1.333 2.75-1.05 2.75-1.05.55 1.409.2 2.46.1 2.716.637.718 1.025 1.628 1.025 2.756 0 3.934-2.337 4.806-4.562 5.062.362.32.675.936.675 1.897 0 1.371-.013 2.473-.013 2.82 0 .268.188.589.688.486a10.039 10.039 0 0 0 4.932-3.74A10.447 10.447 0 0 0 22 12.253C22 6.588 17.525 2 12 2Z"
-            ></path>
+            />
           </svg>
           <span>GitHub</span>
-        </a>
+        </Button>
       </div>
     </div>
   </Container>
 
-  <!-- Tilted Photo Gallery Strip (Ready for your personal photos) -->
+  <!-- Tilted Photo Gallery Strip (Ready for personal photos) -->
   <div class="mt-14 sm:mt-20">
     <div class="-my-4 flex justify-center gap-4 overflow-hidden py-4 sm:gap-8">
       {
@@ -103,9 +107,7 @@ const photos = [
     <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-16 lg:max-w-none lg:grid-cols-2">
       <!-- Left Column: Featured Wiki Pages & Articles -->
       <div>
-        <div class="mb-8 text-sm/7 font-semibold text-olive-700 dark:text-olive-400">
-          Starting Content · Wiki & Articles
-        </div>
+        <Eyebrow class="mb-8">Starting Content · Wiki & Articles</Eyebrow>
         <div class="flex flex-col gap-14">
           {
             articles.map((article) => (
@@ -122,106 +124,24 @@ const photos = [
         </div>
       </div>
 
-      <!-- Right Column: Movie Database Shelf Snapshot + Quick Links -->
+      <!-- Right Column: Movie Database Shelf Snapshot + Sister App Card -->
       <div class="space-y-8 lg:pl-16 xl:pl-24">
-        <section class="rounded-2xl border border-olive-950/10 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
-          <div class="flex items-center justify-between gap-2">
-            <h2 class="flex items-center text-sm/7 font-semibold text-olive-950 dark:text-white">
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                aria-hidden="true"
-                class="size-6 flex-none"
-              >
-                <rect
-                  x="2.75"
-                  y="4.75"
-                  width="18.5"
-                  height="14.5"
-                  rx="2.5"
-                  class="fill-olive-950/5 stroke-olive-700 dark:fill-white/5 dark:stroke-olive-400"
-                ></rect>
-                <path
-                  d="M7 5v14M17 5v14M3 9.5h4M17 9.5h4M3 14.5h4M17 14.5h4"
-                  class="stroke-olive-700 dark:stroke-olive-400"></path>
-              </svg>
-              <span class="ml-3">Movies We Own</span>
-            </h2>
-            <Badge color="teal">{movies.length} Titles</Badge>
-          </div>
+        <MovieShelfCard movies={movies} />
 
-          <div class="mt-2 text-sm/7 text-olive-700 dark:text-olive-400">
-            Physical media collection indexed with Plex-compatible metadata
-            (<code class="font-mono text-xs">sortTitle</code>,{' '}
-            <code class="font-mono text-xs">editionTitle</code>, IMDb/TMDb GUIDs).
-          </div>
-
-          <!-- Format Breakdown Pills -->
-          <div class="mt-4 grid grid-cols-2 gap-3">
-            <div class="rounded-xl bg-olive-950/5 px-3.5 py-2.5 dark:bg-white/5">
-              <div class="text-xs text-olive-700 dark:text-olive-400">4K UHD Discs</div>
-              <div class="mt-0.5 font-display text-2xl text-olive-950 dark:text-white">
-                {uhdCount}
-              </div>
-            </div>
-            <div class="rounded-xl bg-olive-950/5 px-3.5 py-2.5 dark:bg-white/5">
-              <div class="text-xs text-olive-700 dark:text-olive-400">Blu-ray Discs</div>
-              <div class="mt-0.5 font-display text-2xl text-olive-950 dark:text-white">
-                {blurayCount}
-              </div>
-            </div>
-          </div>
-
-          <!-- Sample Shelf Highlights -->
-          <ol class="mt-6 divide-y divide-olive-950/10 dark:divide-white/10">
-            {
-              spotlightMovies.map((movie) => (
-                <li class="py-2.5 first:pt-0 last:pb-0">
-                  <a
-                    href={`/movies/${movie.slug}`}
-                    class="group flex min-h-11 items-center justify-between gap-3"
-                  >
-                    <div class="min-w-0">
-                      <p class="truncate text-sm font-medium text-olive-950 transition group-hover:opacity-60 dark:text-white">
-                        {movie.title}
-                      </p>
-                      <p class="text-xs text-olive-700 dark:text-olive-400">
-                        {movie.year} · {movie.directors[0]}
-                        {movie.editionTitle ? ` · ${movie.editionTitle}` : ''}
-                      </p>
-                    </div>
-                    <Badge color={movie.mediaFormat === '4K UHD' ? 'teal' : 'zinc'}>
-                      {movie.mediaFormat}
-                    </Badge>
-                  </a>
-                </li>
-              ))
-            }
-          </ol>
-
-          <Button href="/movies" variant="secondary" class="mt-6 w-full" size="lg">
-            Explore Full Movie Database →
-          </Button>
-        </section>
-
-        <!-- Sister App Card -->
-        <section class="rounded-2xl border border-olive-950/10 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
-          <h2 class="text-sm/7 font-semibold text-olive-950 dark:text-white">
+        <Card as="section" variant="surface" padding="md">
+          <Subheading level={2} variant="sans">
             More on benalloway.com
-          </h2>
-          <div class="mt-2 text-sm/7 text-olive-700 dark:text-olive-400">
+          </Subheading>
+          <Text size="sm" class="mt-2">
             Looking for our family cookbook and capsule meal planner? It lives
             right here on this site:
-          </div>
+          </Text>
           <div class="mt-4">
-            <Button href="/recipes" variant="secondary" class="w-full" size="lg">
+            <Button href="/recipes/" variant="secondary" size="lg" class="w-full">
               Open Recipes →
             </Button>
           </div>
-        </section>
+        </Card>
       </div>
     </div>
   </Container>

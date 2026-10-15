@@ -1,4 +1,6 @@
 ---
+import Button from './ui/Button.astro';
+
 const pathname = Astro.url.pathname;
 
 const navItems = [
@@ -11,7 +13,7 @@ function isActive(href: string, currentPath: string) {
 }
 ---
 
-<header class="sticky top-0 z-10 bg-olive-100 dark:bg-olive-950">
+<header class="sticky top-0 z-10 bg-olive-100/95 backdrop-blur-xs dark:bg-olive-950/95">
   <nav aria-label="Primary">
     <div class="mx-auto flex h-[var(--scroll-padding-top)] max-w-7xl items-center gap-4 px-6 lg:px-10">
       <div class="flex flex-1 items-center">
@@ -47,15 +49,12 @@ function isActive(href: string, currentPath: string) {
       </div>
 
       <div class="flex flex-1 items-center justify-end gap-2">
-        <button
-          type="button"
+        <Button
+          variant="plain"
+          size="icon"
           data-theme-toggle
           aria-label="Toggle color theme"
-          class="relative inline-flex size-11 items-center justify-center rounded-full text-olive-950 transition hover:bg-olive-950/10 active:scale-[0.98] dark:text-white dark:hover:bg-white/10"
         >
-          <span
-            class="absolute top-1/2 left-1/2 size-[max(100%,3rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
-            aria-hidden="true"></span>
           <svg
             viewBox="0 0 24 24"
             stroke-width="1.5"
@@ -64,10 +63,11 @@ function isActive(href: string, currentPath: string) {
             aria-hidden="true"
             class="size-5 fill-olive-950/5 stroke-current transition dark:hidden"
           >
-            <path d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z"></path>
+            <path d="M8 12.25A4.25 4.25 0 0 1 12.25 8v0a4.25 4.25 0 0 1 4.25 4.25v0a4.25 4.25 0 0 1-4.25 4.25v0A4.25 4.25 0 0 1 8 12.25v0Z" />
             <path
               d="M12.25 3v1.5M21.5 12.25H20M18.791 18.791l-1.06-1.06M18.791 5.709l-1.06 1.06M12.25 20v1.5M4.5 12.25H3M6.77 6.77 5.709 5.709M6.77 17.73l-1.061 1.061"
-              fill="none"></path>
+              fill="none"
+            />
           </svg>
           <svg
             viewBox="0 0 24 24"
@@ -78,26 +78,29 @@ function isActive(href: string, currentPath: string) {
               d="M17.25 16.22a6.937 6.937 0 0 1-9.47-9.47 7.451 7.451 0 1 0 9.47 9.47ZM12.75 7C17 7 17 2.75 17 2.75S17 7 21.25 7C17 7 17 11.25 17 11.25S17 7 12.75 7Z"
               stroke-width="1.5"
               stroke-linecap="round"
-              stroke-linejoin="round"></path>
+              stroke-linejoin="round"
+            />
           </svg>
-        </button>
+        </Button>
 
-        <button
-          type="button"
+        <Button
+          variant="plain"
+          size="icon"
           data-mobile-menu-open
           aria-haspopup="dialog"
           aria-expanded="false"
           aria-controls="mobile-nav-dialog"
           aria-label="Open navigation menu"
-          class="relative inline-flex size-11 items-center justify-center rounded-full text-olive-950 transition hover:bg-olive-950/10 active:scale-[0.98] lg:hidden dark:text-white dark:hover:bg-white/10"
+          class="lg:hidden"
         >
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-6">
             <path
               fill-rule="evenodd"
               d="M3.748 8.248a.75.75 0 0 1 .75-.75h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75ZM3.748 15.75a.75.75 0 0 1 .75-.751h15a.75.75 0 0 1 0 1.5h-15a.75.75 0 0 1-.75-.75Z"
-              clip-rule="evenodd"></path>
+              clip-rule="evenodd"
+            />
           </svg>
-        </button>
+        </Button>
       </div>
     </div>
 
@@ -105,18 +108,18 @@ function isActive(href: string, currentPath: string) {
     <dialog
       id="mobile-nav-dialog"
       aria-label="Mobile navigation"
-      class="fixed inset-0 z-50 m-0 h-full w-full max-h-none max-w-none bg-transparent p-0 backdrop:bg-transparent"
+      class="fixed inset-0 z-50 m-0 h-full max-h-none w-full max-w-none bg-transparent p-0 backdrop:bg-transparent"
     >
       <div
         data-mobile-menu-panel
         class="fixed inset-0 bg-olive-100 px-6 py-6 lg:px-10 dark:bg-olive-950"
       >
         <div class="flex justify-end">
-          <button
-            type="button"
+          <Button
+            variant="plain"
+            size="icon-lg"
             data-mobile-menu-close
             aria-label="Close navigation menu"
-            class="relative inline-flex size-12 items-center justify-center rounded-full text-olive-950 transition hover:bg-olive-950/10 dark:text-white dark:hover:bg-white/10"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -129,7 +132,7 @@ function isActive(href: string, currentPath: string) {
             >
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
             </svg>
-          </button>
+          </Button>
         </div>
         <nav aria-label="Mobile" class="mt-6">
           <div class="flex flex-col gap-2">

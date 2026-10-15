@@ -11,10 +11,12 @@ Key decisions:
 - **Platform:** Cloudflare Workers (free tier) serving `benalloway.com`
 - **Frontend:** Astro 7 (SSR via Cloudflare adapter) + plain TS islands (zero
   client framework JS for instant mobile rendering)
-- **Design System:** Tailwind Plus **Spotlight** template + **Catalyst UI Kit**
-  ported to Astro + Tailwind CSS v4, reinforced with **Material Design 3 (MD3)**
-  mobile ergonomics (48px minimum touch targets, semantic tonal surfaces, clear
-  state layers, light/dark theme toggle)
+- **Design System (`@benalloway/ui`):** Shared Astro design kit (`../ui`,
+  vendored via `scripts/sync-ui.sh` into `src/components/ui/` and
+  `src/styles/global.css`) combining **Oatmeal (olive-instrument)** tokens +
+  **Catalyst UI Kit** + **Tailwind UI Ecommerce** building blocks, reinforced
+  with **Material Design 3 (MD3)** mobile ergonomics (48px minimum touch
+  targets, semantic tonal surfaces, clear state layers, light/dark theme toggle)
 - **Wiki & Articles:** Astro Content Collections (`src/content/articles/*.md`)
   so adding new wiki pages, top-N movie lists, or life update blog posts is
   dropping a single Markdown file
@@ -25,7 +27,10 @@ Key decisions:
   `Digital`) and A/V transfer specs. Exported at `/api/movies.json` in Plex
   `MediaContainer.Metadata` shape for seamless future Plex/D1 portability
 - **Repo & Agent Process:** 1:1 with `benalloway/recipes` (`AGENTS.md`,
-  `CONTRIBUTING.md`, `GLOSSARY.md`, `docs/adr/`, `.sandcastle/`, Pocock skills)
+  `CONTRIBUTING.md`, `GLOSSARY.md`, `docs/adr/`, `.sandcastle/`, Pocock skills),
+  supporting both Docker-free local runs (`npm run sandcastle` via git
+  worktrees) and cloud GitHub Actions runs (`npm run sandcastle:gh` /
+  `.github/workflows/sandcastle.yml`).
 
 ## Architecture
 

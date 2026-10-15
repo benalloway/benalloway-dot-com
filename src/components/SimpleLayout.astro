@@ -1,5 +1,6 @@
 ---
-import Container from './Container.astro';
+import Container from './ui/Container.astro';
+import PageHeader from './ui/PageHeader.astro';
 
 interface Props {
   title: string;
@@ -11,21 +12,7 @@ const { title, intro, eyebrow } = Astro.props;
 ---
 
 <Container class="mt-12 sm:mt-24">
-  <header class="max-w-2xl">
-    {
-      eyebrow && (
-        <div class="mb-2 text-sm/7 font-semibold text-olive-700 dark:text-olive-400">
-          {eyebrow}
-        </div>
-      )
-    }
-    <h1 class="font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-[5rem]/20 dark:text-white">
-      {title}
-    </h1>
-    <div class="mt-6 text-base/7 text-pretty text-olive-700 dark:text-olive-400">
-      {intro}
-    </div>
-  </header>
+  <PageHeader title={title} intro={intro} eyebrow={eyebrow} />
   <div class="mt-12 sm:mt-16">
     <slot />
   </div>

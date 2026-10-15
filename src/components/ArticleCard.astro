@@ -1,5 +1,7 @@
 ---
-import Badge from './Badge.astro';
+import Badge from './ui/Badge.astro';
+import Heading from './ui/Heading.astro';
+import Text from './ui/Text.astro';
 import { formatDate } from '../lib/formatDate';
 
 interface Props {
@@ -22,38 +24,39 @@ const {
 ---
 
 <article class="group relative flex flex-col items-start">
-  <h2 class="font-display text-[2rem]/10 tracking-tight text-pretty text-olive-950 sm:text-3xl/10 dark:text-white">
+  <Heading level={2} size="md" class="transition group-hover:opacity-65">
     <a href={href}>
       <span class="absolute inset-0 z-10" aria-hidden="true"></span>
       <span class="relative z-10">{title}</span>
     </a>
-  </h2>
+  </Heading>
 
   <div class="relative z-10 order-first mb-3 flex flex-wrap items-center gap-3 text-sm/7 text-olive-700 dark:text-olive-400">
     <time datetime={publishedAt}>{formatDate(publishedAt)}</time>
-    {category && <Badge color="teal">{category}</Badge>}
+    {category && <Badge color="teal" size="sm">{category}</Badge>}
   </div>
 
-  <p class="relative z-10 mt-2 text-base/7 text-olive-700 dark:text-olive-400">
+  <Text class="relative z-10 mt-2">
     {description}
-  </p>
+  </Text>
 
   <div
     aria-hidden="true"
-    class="relative z-10 mt-4 inline-flex items-center gap-2 text-sm/7 font-medium text-olive-950 dark:text-white"
+    class="relative z-10 mt-4 inline-flex items-center gap-2 text-sm/7 font-medium text-olive-950 transition group-hover:opacity-70 dark:text-white"
   >
     {cta}
     <svg
       viewBox="0 0 16 16"
       fill="none"
       aria-hidden="true"
-      class="size-4 stroke-current"
+      class="size-4 stroke-current transition-transform group-hover:translate-x-0.5"
     >
       <path
         d="M6.75 5.75 9.25 8l-2.5 2.25"
         stroke-width="1.5"
         stroke-linecap="round"
-        stroke-linejoin="round"></path>
+        stroke-linejoin="round"
+      />
     </svg>
   </div>
 </article>

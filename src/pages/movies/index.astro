@@ -1,12 +1,16 @@
 ---
 import Base from '../../layouts/Base.astro';
 import SimpleLayout from '../../components/SimpleLayout.astro';
-import Badge from '../../components/Badge.astro';
-import {
-  getAllMovies,
-  formatRuntime,
-  type MediaFormat,
-} from '../../data/movies';
+import Card from '../../components/ui/Card.astro';
+import FilterChip from '../../components/ui/FilterChip.astro';
+import TextInput from '../../components/ui/TextInput.astro';
+import SelectInput from '../../components/ui/SelectInput.astro';
+import Link from '../../components/ui/Link.astro';
+import Text from '../../components/ui/Text.astro';
+import EmptyState from '../../components/ui/EmptyState.astro';
+import Button from '../../components/ui/Button.astro';
+import MovieCard from '../../components/MovieCard.astro';
+import { getAllMovies, type MediaFormat } from '../../data/movies';
 
 const movies = getAllMovies();
 const formats: Array<'ALL' | MediaFormat> = [
@@ -21,12 +25,16 @@ const allGenres = Array.from(
   new Set(movies.flatMap((m) => m.genres)),
 ).sort();
 
-const formatBadgeColor: Record<MediaFormat, 'teal' | 'zinc'> = {
-  '4K UHD': 'teal',
-  'Blu-ray': 'teal',
-  DVD: 'zinc',
-  Digital: 'zinc',
-};
+const genreOptions = [
+  { value: 'ALL', label: 'All Genres' },
+  ...allGenres.map((genre) => ({ value: genre, label: genre })),
+];
+
+const sortOptions = [
+  { value: 'sortTitle', label: 'Sort: Plex Sort Title (A–Z)' },
+  { value: 'rating-desc', label: 'Sort: Highest Rated' },
+  { value: 'year-desc', label: 'Sort: Release Year (Newest)' },
+];
 ---
 
 <Base
@@ -38,12 +46,13 @@ const formatBadgeColor: Record<MediaFormat, 'teal' | 'zinc'> = {
     title="Movies we own."
     intro="Our physical media shelf (4K UHD Blu-ray, Criterion editions, and standard Blu-ray), structured with Plex-compatible metadata (sortTitle, editionTitle, IMDb/TMDb GUIDs, and A/V specs) so it stays 1:1 portable with our home Plex server."
   >
-    <!-- MD3 Mobile-Friendly Filter Bar -->
-    <section
+    <!-- Ecommerce Category Filter Bar + Catalyst Controls -->
+    <Card
+      as="section"
+      variant="surface"
+      padding="md"
       aria-label="Filter and sort movie library"
-      class="rounded-2xl border border-olive-950/10 bg-white/70 p-4 sm:p-6 dark:border-white/10 dark:bg-white/5"
     >
-      <!-- Format Filter Chips (MD3 48px touch targets on mobile) -->
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div
           role="group"
@@ -57,31 +66,29 @@ const formatBadgeColor: Record<MediaFormat, 'teal' | 'zinc'> = {
                   ? movies.length
                   : movies.filter((m) => m.mediaFormat === fmt).length;
               return (
-                <button
-                  type="button"
+                <FilterChip
+                  label={fmt === 'ALL' ? 'All Formats' : fmt}
+                  count={count}
+                  pressed={fmt === 'ALL'}
                   data-format-chip={fmt}
-                  aria-pressed={fmt === 'ALL' ? 'true' : 'false'}
-                  class="inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-olive-950/15 bg-white px-4 py-2 text-xs font-semibold text-olive-950 shadow-2xs transition hover:border-olive-950/25 aria-pressed:border-olive-950 aria-pressed:bg-olive-950 aria-pressed:text-white dark:border-white/15 dark:bg-olive-950 dark:text-white dark:hover:border-white/25 dark:aria-pressed:border-olive-300 dark:aria-pressed:bg-olive-300 dark:aria-pressed:text-olive-950"
-                >
-                  <span>{fmt === 'ALL' ? 'All Formats' : fmt}</span>
-                  <span class="rounded-full bg-olive-950/5 px-1.5 py-0.5 text-[11px] text-olive-700 dark:bg-white/10 dark:text-olive-300">
-                    {count}
-                  </span>
-                </button>
+                />
               );
             })
           }
         </div>
 
-        <div class="flex items-center gap-3 text-xs font-medium text-olive-700 dark:text-olive-400">
-          <span data-movie-count>{movies.length} films</span>
+        <div class="flex items-center gap-3 text-xs/6 font-medium text-olive-700 dark:text-olive-400">
+          <Text as="span" size="xs" class="font-medium" data-movie-count>
+            {movies.length} films
+          </Text>
           <span>·</span>
-          <a
+          <Link
             href="/api/movies.json"
-            class="inline-flex min-h-10 items-center font-semibold text-olive-950 underline decoration-olive-500/40 underline-offset-4 hover:opacity-60 dark:text-white"
+            variant="underline"
+            class="inline-flex min-h-10 items-center text-xs/6 font-semibold"
           >
             Plex JSON ↗
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -91,173 +98,56 @@ const formatBadgeColor: Record<MediaFormat, 'teal' | 'zinc'> = {
           <label for="movie-search" class="sr-only">
             Search by title, director, actor, or studio
           </label>
-          <div class="relative">
-            <svg
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden="true"
-              class="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2 stroke-olive-500"
-            >
-              <path
-                d="m17.5 17.5-3.625-3.625m1.958-4.708a6.667 6.667 0 1 1-13.333 0 6.667 6.667 0 0 1 13.333 0Z"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"></path>
-            </svg>
-            <input
-              id="movie-search"
-              type="search"
-              data-movie-search
-              placeholder="Search title, director, cast, or edition…"
-              class="block min-h-12 w-full rounded-xl border border-olive-950/10 bg-white py-2.5 pr-4 pl-10 text-base text-olive-950 placeholder:text-olive-500 focus:border-olive-600 focus:ring-2 focus:ring-olive-600/20 focus:outline-hidden sm:min-h-10 sm:text-sm dark:border-white/10 dark:bg-olive-950 dark:text-white dark:placeholder:text-olive-500"
-            />
-          </div>
+          <TextInput
+            id="movie-search"
+            type="search"
+            icon="search"
+            data-movie-search
+            placeholder="Search title, director, cast, or edition…"
+          />
         </div>
 
         <div class="sm:col-span-3">
           <label for="movie-genre" class="sr-only">Filter by genre</label>
-          <select
+          <SelectInput
             id="movie-genre"
+            options={genreOptions}
             data-movie-genre
-            class="block min-h-12 w-full rounded-xl border border-olive-950/10 bg-white px-3.5 py-2.5 text-base text-olive-950 focus:border-olive-600 focus:ring-2 focus:ring-olive-600/20 focus:outline-hidden sm:min-h-10 sm:text-sm dark:border-white/10 dark:bg-olive-950 dark:text-white"
-          >
-            <option value="ALL">All Genres</option>
-            {allGenres.map((genre) => <option value={genre}>{genre}</option>)}
-          </select>
+          />
         </div>
 
         <div class="sm:col-span-3">
           <label for="movie-sort" class="sr-only">Sort movies</label>
-          <select
+          <SelectInput
             id="movie-sort"
+            options={sortOptions}
             data-movie-sort
-            class="block min-h-12 w-full rounded-xl border border-olive-950/10 bg-white px-3.5 py-2.5 text-base text-olive-950 focus:border-olive-600 focus:ring-2 focus:ring-olive-600/20 focus:outline-hidden sm:min-h-10 sm:text-sm dark:border-white/10 dark:bg-olive-950 dark:text-white"
-          >
-            <option value="sortTitle">Sort: Plex Sort Title (A–Z)</option>
-            <option value="rating-desc">Sort: Highest Rated</option>
-            <option value="year-desc">Sort: Release Year (Newest)</option>
-          </select>
+          />
         </div>
       </div>
-    </section>
+    </Card>
 
-    <!-- Movie Cards Grid -->
+    <!-- Ecommerce Product Cards Grid -->
     <div
       data-movie-grid
       class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
     >
-      {
-        movies.map((movie) => {
-          const searchBlob = [
-            movie.title,
-            movie.originalTitle ?? '',
-            movie.directors.join(' '),
-            movie.cast.map((c) => c.name).join(' '),
-            movie.studio,
-            movie.editionTitle ?? '',
-            movie.genres.join(' '),
-            String(movie.year),
-          ].join(' ');
-
-          return (
-            <article
-              data-movie-card
-              data-format={movie.mediaFormat}
-              data-genres={movie.genres.join('|')}
-              data-sort-title={movie.sortTitle}
-              data-year={movie.year}
-              data-rating={movie.userRating ?? 0}
-              data-search={searchBlob}
-              class="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-olive-950/10 bg-white p-5 shadow-xs transition hover:border-olive-950/20 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:hover:border-white/20"
-            >
-              <div>
-                <!-- Top Poster Header Banner + Format Badge -->
-                <div
-                  class:list={[
-                    'relative mb-4 flex h-28 flex-col justify-between rounded-xl bg-linear-to-br p-4 text-white',
-                    movie.posterAccent,
-                  ]}
-                >
-                  <div class="flex items-center justify-between gap-2">
-                    <span class="inline-flex items-center rounded-md bg-black/40 px-2 py-0.5 text-xs font-semibold tracking-wide text-white backdrop-blur-xs">
-                      {movie.mediaFormat}
-                    </span>
-                    {movie.userRating && (
-                      <span class="inline-flex items-center gap-1 rounded-md bg-black/40 px-2 py-0.5 text-xs font-semibold text-amber-300 backdrop-blur-xs">
-                        ★ {movie.userRating.toFixed(1)}
-                      </span>
-                    )}
-                  </div>
-
-                  <div class="flex items-baseline justify-between gap-2 text-xs text-white/85">
-                    <span class="font-mono">{movie.year}</span>
-                    <span>
-                      {movie.contentRating} · {formatRuntime(movie.duration)}
-                    </span>
-                  </div>
-                </div>
-
-                <!-- Title & Director -->
-                <h2 class="font-display text-xl tracking-tight text-olive-950 transition group-hover:opacity-60 dark:text-white">
-                  <a href={`/movies/${movie.slug}`} class="focus:outline-hidden">
-                    <span class="absolute inset-0 z-10" aria-hidden="true" />
-                    {movie.title}
-                  </a>
-                </h2>
-
-                <p class="mt-1 text-xs font-medium text-olive-700 dark:text-olive-400">
-                  Directed by {movie.directors.join(', ')} · {movie.studio}
-                </p>
-
-                {movie.editionTitle && (
-                  <div class="mt-2.5">
-                    <Badge color={formatBadgeColor[movie.mediaFormat]}>
-                      {movie.editionTitle}
-                    </Badge>
-                  </div>
-                )}
-
-                <p class="mt-3 line-clamp-3 text-sm/7 text-olive-700 dark:text-olive-400">
-                  {movie.summary}
-                </p>
-              </div>
-
-              <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-olive-950/10 pt-3 text-xs dark:border-white/10">
-                <div class="flex flex-wrap gap-1.5">
-                  {movie.genres.map((g) => (
-                    <Badge color="zinc">{g}</Badge>
-                  ))}
-                </div>
-                <span class="font-medium text-olive-950 dark:text-white">
-                  Specs →
-                </span>
-              </div>
-            </article>
-          );
-        })
-      }
+      {movies.map((movie) => <MovieCard movie={movie} />)}
     </div>
 
     <!-- Empty Filter State -->
-    <div
-      data-movie-empty
+    <EmptyState
+      dashed
       hidden
-      class="mt-8 rounded-2xl border border-dashed border-olive-950/20 p-12 text-center dark:border-white/15"
+      data-movie-empty
+      title="No movies match those filters."
+      description="Try clearing your search query or switching the format filter back to All."
+      class="mt-8"
     >
-      <p class="font-display text-2xl text-olive-950 dark:text-white">
-        No movies match those filters.
-      </p>
-      <p class="mt-1 text-sm/7 text-olive-700 dark:text-olive-400">
-        Try clearing your search query or switching the format filter back to All.
-      </p>
-      <button
-        type="button"
-        data-movie-reset
-        class="mt-4 inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full bg-olive-950 px-4 py-2 text-sm/7 font-medium text-white transition hover:bg-olive-800 dark:bg-olive-300 dark:text-olive-950 dark:hover:bg-olive-200"
-      >
+      <Button variant="primary" data-movie-reset>
         Reset filters
-      </button>
-    </div>
+      </Button>
+    </EmptyState>
   </SimpleLayout>
 </Base>
 

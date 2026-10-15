@@ -9,6 +9,26 @@ the previous version).
 
 ---
 
+## 2026-10-15 — Centralized `@benalloway/ui` design system + Docker-free / GitHub Actions Sandcastle (ADR-0001, ADR-0004)
+
+Change: Consolidated all design standards (typography, buttons, badges, links,
+cards, description lists, inputs, filter chips, stats, disclosures) into
+`@benalloway/ui` (`v0.2.0`) and vendored into `src/components/ui/` +
+`src/styles/global.css` via `scripts/sync-ui.sh`; extracted `MovieCard`,
+`MovieArtwork`, and `MovieShelfCard` components; refactored all pages and
+layouts to compose `src/components/ui/*` primitives. Upgraded `.sandcastle/main.ts`
+to run Docker-free by default (`noSandbox()` + git worktrees) and added
+`.github/workflows/sandcastle.yml` (`npm run sandcastle:gh` / `Sandcastle` +
+`ready-for-agent` label trigger) for running Sandcastle on GitHub Actions.
+
+Verify: `npm run check` + `npm run build` + `npm run sandcastle` green; live
+200s across `/`, `/movies`, `/movies/the-fellowship-of-the-ring`, `/articles`,
+`/articles/favorite-movies`, `/api/movies.json`, and `/api/health`.
+
+Rollback: `npx wrangler rollback` (UI component refactor + automation only; no schema change).
+
+---
+
 ## Unreleased — Apex URL architecture + recipes link (ADR-0005)
 
 Change: Home-page Recipes entry now points at `/recipes` (apex subpath)

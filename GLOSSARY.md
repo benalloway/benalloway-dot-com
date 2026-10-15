@@ -20,7 +20,10 @@ and not invent synonyms. See `docs/agents/domain.md` for consumer rules.
   zero client framework
 - **portability boundary**: `src/lib/runtime.ts`, `src/lib/adapters/*`,
   `src/env.d.ts` — the only files that may import platform modules
-- **spotlight shell**: the framed `max-w-7xl` layout, pill navbar, and
-  `.prose-spotlight` typography ported from Tailwind Plus Spotlight (ADR-0002)
+- **ui kit (`@benalloway/ui`)**: the single source of truth for design tokens
+  (`src/styles/global.css`) and reusable Astro building blocks
+  (`src/components/ui/*`), combining Oatmeal olive-instrument visuals with
+  Catalyst UI Kit and Tailwind UI Ecommerce primitives (vendored via
+  `scripts/sync-ui.sh`)
 - **touch target**: MD3 / Catalyst ergonomic minimum (`44–48px` hit area) on all
   interactive mobile controls

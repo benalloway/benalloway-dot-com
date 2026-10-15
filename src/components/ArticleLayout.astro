@@ -1,6 +1,9 @@
 ---
-import Container from './Container.astro';
-import Badge from './Badge.astro';
+import Container from './ui/Container.astro';
+import Button from './ui/Button.astro';
+import Badge from './ui/Badge.astro';
+import Heading from './ui/Heading.astro';
+import Text from './ui/Text.astro';
 import { formatDate } from '../lib/formatDate';
 
 interface Props {
@@ -29,14 +32,13 @@ const {
 <Container class="mt-12 lg:mt-24">
   <div class="xl:relative">
     <div class="mx-auto max-w-2xl">
-      <a
+      <Button
         href={backHref}
+        variant="plain"
+        size="icon"
         aria-label={backLabel}
-        class="group relative mb-8 inline-flex size-11 items-center justify-center rounded-full text-olive-950 transition hover:bg-olive-950/10 lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0 dark:text-white dark:hover:bg-white/10"
+        class="mb-8 lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0"
       >
-        <span
-          class="absolute top-1/2 left-1/2 size-[max(100%,3rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
-          aria-hidden="true"></span>
         <svg
           viewBox="0 0 16 16"
           fill="none"
@@ -47,9 +49,10 @@ const {
             d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5"
             stroke-width="1.5"
             stroke-linecap="round"
-            stroke-linejoin="round"></path>
+            stroke-linejoin="round"
+          />
         </svg>
-      </a>
+      </Button>
 
       <article>
         <header class="flex flex-col">
@@ -60,29 +63,29 @@ const {
                 <span>· Updated {formatDate(updatedAt)}</span>
               )
             }
-            <Badge color="teal">{category}</Badge>
+            <Badge color="teal" size="sm">{category}</Badge>
           </div>
 
-          <h1 class="mt-6 font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-6xl/16 dark:text-white">
+          <Heading level={1} size="xl" class="mt-6">
             {title}
-          </h1>
+          </Heading>
 
-          <div class="mt-6 text-lg/8 text-pretty text-olive-700 dark:text-olive-400">
+          <Text as="div" size="lg" class="mt-6 text-pretty">
             {description}
-          </div>
+          </Text>
 
           {
             tags.length > 0 && (
               <div class="mt-5 flex flex-wrap gap-2">
                 {tags.map((tag) => (
-                  <Badge color="zinc">#{tag}</Badge>
+                  <Badge color="zinc" size="sm">#{tag}</Badge>
                 ))}
               </div>
             )
           }
         </header>
 
-        <div class="prose-spotlight mt-10">
+        <div class="prose-oatmeal prose-spotlight mt-10">
           <slot />
         </div>
       </article>

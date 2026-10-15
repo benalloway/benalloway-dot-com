@@ -1,0 +1,101 @@
+---
+import Card from './ui/Card.astro';
+import Subheading from './ui/Subheading.astro';
+import Badge from './ui/Badge.astro';
+import Text from './ui/Text.astro';
+import Code from './ui/Code.astro';
+import Stat from './ui/Stat.astro';
+import Button from './ui/Button.astro';
+import type { Movie } from '../data/movies';
+
+/**
+ * Home page "Movies We Own" shelf snapshot widget.
+ * Composes Card, Subheading, Badge, Text, Code, Stat, and Button from `ui/`.
+ */
+interface Props {
+  movies: Movie[];
+}
+
+const { movies } = Astro.props;
+const uhdCount = movies.filter((m) => m.mediaFormat === '4K UHD').length;
+const blurayCount = movies.filter((m) => m.mediaFormat === 'Blu-ray').length;
+const spotlightMovies = movies.filter((m) => m.isFavorite).slice(0, 5);
+---
+
+<Card as="section" variant="surface" padding="md">
+  <div class="flex items-center justify-between gap-2">
+    <Subheading level={2} variant="sans" class="flex items-center">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        class="size-6 flex-none"
+      >
+        <rect
+          x="2.75"
+          y="4.75"
+          width="18.5"
+          height="14.5"
+          rx="2.5"
+          class="fill-olive-950/5 stroke-olive-700 dark:fill-white/5 dark:stroke-olive-400"
+        />
+        <path
+          d="M7 5v14M17 5v14M3 9.5h4M17 9.5h4M3 14.5h4M17 14.5h4"
+          class="stroke-olive-700 dark:stroke-olive-400"
+        />
+      </svg>
+      <span class="ml-3">Movies We Own</span>
+    </Subheading>
+    <Badge color="teal" size="sm">{movies.length} Titles</Badge>
+  </div>
+
+  <Text size="sm" class="mt-2">
+    Physical media collection indexed with Plex-compatible metadata (<Code>sortTitle</Code>,{' '}
+    <Code>editionTitle</Code>, IMDb/TMDb GUIDs).
+  </Text>
+
+  <div class="mt-4 grid grid-cols-2 gap-3">
+    <Stat label="4K UHD Discs" value={uhdCount} />
+    <Stat label="Blu-ray Discs" value={blurayCount} />
+  </div>
+
+  <ol class="mt-6 divide-y divide-olive-950/10 dark:divide-white/10">
+    {
+      spotlightMovies.map((movie) => (
+        <li class="py-2.5 first:pt-0 last:pb-0">
+          <a
+            href={`/movies/${movie.slug}`}
+            class="group flex min-h-11 items-center justify-between gap-3"
+          >
+            <div class="min-w-0">
+              <Text
+                size="sm"
+                variant="primary"
+                class="truncate font-medium transition group-hover:opacity-60"
+              >
+                {movie.title}
+              </Text>
+              <Text size="xs">
+                {movie.year} · {movie.directors[0]}
+                {movie.editionTitle ? ` · ${movie.editionTitle}` : ''}
+              </Text>
+            </div>
+            <Badge
+              color={movie.mediaFormat === '4K UHD' ? 'teal' : 'zinc'}
+              size="sm"
+            >
+              {movie.mediaFormat}
+            </Badge>
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+
+  <Button href="/movies" variant="secondary" size="lg" class="mt-6 w-full">
+    Explore Full Movie Database →
+  </Button>
+</Card>

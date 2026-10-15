@@ -1,0 +1,91 @@
+---
+import Card from './ui/Card.astro';
+import Badge from './ui/Badge.astro';
+import Heading from './ui/Heading.astro';
+import Text from './ui/Text.astro';
+import MovieArtwork from './MovieArtwork.astro';
+import type { MediaFormat, Movie } from '../data/movies';
+
+/**
+ * Tailwind UI Ecommerce product-card (`11-card-with-full-details`) adapted to
+ * the Oatmeal olive-instrument design system for the `/movies` catalog grid.
+ */
+interface Props {
+  movie: Movie;
+}
+
+const { movie } = Astro.props;
+
+const formatBadgeColor: Record<MediaFormat, 'teal' | 'zinc'> = {
+  '4K UHD': 'teal',
+  'Blu-ray': 'teal',
+  DVD: 'zinc',
+  Digital: 'zinc',
+};
+
+const searchBlob = [
+  movie.title,
+  movie.originalTitle ?? '',
+  movie.directors.join(' '),
+  movie.cast.map((c) => c.name).join(' '),
+  movie.studio,
+  movie.editionTitle ?? '',
+  movie.genres.join(' '),
+  String(movie.year),
+].join(' ');
+---
+
+<Card
+  as="article"
+  variant="interactive"
+  padding="md"
+  data-movie-card
+  data-format={movie.mediaFormat}
+  data-genres={movie.genres.join('|')}
+  data-sort-title={movie.sortTitle}
+  data-year={movie.year}
+  data-rating={movie.userRating ?? 0}
+  data-search={searchBlob}
+>
+  <div>
+    <MovieArtwork movie={movie} variant="card" />
+
+    <Heading level={2} size="sm" class="transition group-hover:opacity-65">
+      <a href={`/movies/${movie.slug}`} class="focus:outline-hidden">
+        <span class="absolute inset-0 z-10" aria-hidden="true" />
+        {movie.title}
+      </a>
+    </Heading>
+
+    <Text size="xs" class="mt-1 font-medium">
+      Directed by {movie.directors.join(', ')} · {movie.studio}
+    </Text>
+
+    {
+      movie.editionTitle && (
+        <div class="mt-2.5">
+          <Badge color={formatBadgeColor[movie.mediaFormat]} size="sm">
+            {movie.editionTitle}
+          </Badge>
+        </div>
+      )
+    }
+
+    <Text size="sm" class="mt-3 line-clamp-3">
+      {movie.summary}
+    </Text>
+  </div>
+
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-olive-950/10 pt-3 text-xs/5 dark:border-white/10">
+    <div class="flex flex-wrap gap-1.5">
+      {
+        movie.genres.map((genre) => (
+          <Badge color="zinc" size="sm">
+            {genre}
+          </Badge>
+        ))
+      }
+    </div>
+    <span class="font-medium text-olive-950 dark:text-white">Specs →</span>
+  </div>
+</Card>

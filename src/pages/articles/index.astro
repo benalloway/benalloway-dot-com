@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import SimpleLayout from '../../components/SimpleLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import Text from '../../components/ui/Text.astro';
 import { formatDate } from '../../lib/formatDate';
 
 const entries = (await getCollection('articles')).sort((a, b) =>
@@ -34,12 +35,15 @@ const entries = (await getCollection('articles')).sort((a, b) =>
                   cta="Read article"
                 />
               </div>
-              <time
-                datetime={entry.data.publishedAt}
-                class="relative z-10 order-first mt-1 mb-3 hidden items-center text-sm text-olive-700 md:flex dark:text-olive-400"
+              <Text
+                as="span"
+                size="sm"
+                class="relative z-10 order-first mt-1 mb-3 hidden items-center md:flex"
               >
-                {formatDate(entry.data.publishedAt)}
-              </time>
+                <time datetime={entry.data.publishedAt}>
+                  {formatDate(entry.data.publishedAt)}
+                </time>
+              </Text>
             </div>
           ))
         }

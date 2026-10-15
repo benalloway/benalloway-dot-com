@@ -14,9 +14,25 @@ context after. 1:1 with `mattpocock/skills` + `mattpocock/sandcastle`
   the planner reads; triage roles (`needs-triage` → `ready-for-agent` /
   `ready-for-human`) decide what is agent-ready.
 - `CONTRIBUTING.md` — human-side flow (idea → triage → Sandcastle → merge).
-  `.github/workflows/README.md` — workflow map (CI only; agents run local).
+  `.github/workflows/README.md` — workflow map (`ci.yml` + `sandcastle.yml`).
 - `GLOSSARY.md` + `docs/adr/` — domain vocabulary and decisions. Use glossary
   terms verbatim; flag ADR conflicts explicitly.
+
+## Cross-repo map (`Work/`)
+
+This repo works alongside two sibling repositories under `/home/benalloway/Work`:
+
+- **`@benalloway/ui` (`../ui`, `benalloway/ui`):** Canonical source of truth for
+  all shared design tokens (`src/styles/oatmeal.css`) and all 29 Astro UI
+  primitives (`src/components/*.astro`). **Never hand-edit files inside
+  `src/components/ui/` or `src/styles/global.css` in this repo** — edit them in
+  `../ui`, commit in `../ui`, and run `npm run ui:sync` (`bash scripts/sync-ui.sh`)
+  here so `scripts/ui-version.txt` and the vendored copies stay in lockstep.
+- **`recipes` (`../recipes`, `benalloway/recipes`):** Companion Astro + Cloudflare
+  Workers + D1/R2 app served at `https://benalloway.com/recipes/*` (ADR-0005).
+  Uses the same `@benalloway/ui` design kit (`scripts/sync-ui.sh`) and the same
+  Sandcastle + Pocock skills workflow. Do not modify `../recipes` when working
+  on an issue scoped to `benalloway-dot-com`.
 
 ## Stack invariants (do not violate)
 
@@ -32,14 +48,19 @@ context after. 1:1 with `mattpocock/skills` + `mattpocock/sandcastle`
   `OPENCODE_API_KEY` + `GH_TOKEN` (fine-grained PAT: Issues RW, Metadata R —
   the sandbox's `gh` uses it to read/close issues). Never add Cloudflare
   account IDs or session keys.
-- **Design system (ADR-0004, visuals-only over ADR-0002):** Tailwind CSS v4
-  (`@tailwindcss/vite`) porting Tailwind Plus **Oatmeal olive-instrument**
-  visuals/elements only (olive tokens, Instrument Serif display + Inter,
-  rounded-full pill buttons, tonal badges, sticky olive navbar, full-screen
-  olive mobile menu; layouts/IA untouched) + **Catalyst UI Kit** (`Badge`,
-  `Button`, `DescriptionList`, filter controls) + **MD3 mobile UX**
-  (`min-h-11` / `48px` touch targets, `TouchTarget` hit-area expansion,
-  accessible `<dialog>` mobile menu). Nav IA is `Movies` + `Articles` only.
+- **Design system (ADR-0004, `@benalloway/ui`):** Tailwind CSS v4
+  (`@tailwindcss/vite`) vendored from `@benalloway/ui` (`../ui` via
+  `scripts/sync-ui.sh` + `scripts/ui-version.txt`) into `src/components/ui/`
+  and `src/styles/global.css`. Combines **Oatmeal olive-instrument** theme
+  (olive tokens, Instrument Serif display + Inter, rounded-full pills, tonal
+  surfaces) with **Catalyst UI Kit** (`Heading`, `Subheading`, `Text`, `Link`,
+  `Code`, `Button`, `Badge`, `AnnouncementBadge`, `DescriptionList`, `Divider`,
+  `TextInput`, `SelectInput`) and **Tailwind UI Ecommerce** building blocks
+  (`FilterChip`, `Card`, `Stat`, `Disclosure`, `MovieCard`, `MovieArtwork`) +
+  **MD3 mobile UX** (`min-h-11` / `48px` touch targets, `TouchTarget` hit-area
+  expansion, accessible `<dialog>` mobile menu). Never duplicate typography,
+  button, badge, input, or card styles inline in pages — change them once in
+  `@benalloway/ui` and re-vendor. Nav IA is `Movies` + `Articles` only.
 - **Plex-portable movie metadata (ADR-0003):** Movie entries in
   `src/data/movies.ts` are validated by `MovieSchema` and preserve 1:1 Plex
   `Metadata` field semantics (`title`, `sortTitle`, `originalTitle`, `year`,
@@ -53,43 +74,52 @@ npm run check               # astro sync && tsc --noEmit  — feedback loop befo
 npm run build               # astro build
 npm run preview             # wrangler dev against built bundle
 npm run deploy              # build + wrangler deploy (production!) — see Deploy policy
-npm run sandcastle          # local AFK factory: planner → implementers → reviewers → merger
+npm run ui:sync             # vendor @benalloway/ui into src/components/ui/ and src/styles/global.css
+npm run sandcastle          # Docker-free local AFK factory (git worktrees + host opencode)
+npm run sandcastle:gh       # trigger & watch Sandcastle AFK factory on GitHub Actions (push to main)
+npm run sandcastle:gh:pr    # trigger & watch Sandcastle AFK factory on GitHub Actions (open PR)
 ```
 
 `npm run typecheck` and `npm run test` are aliased to `npm run check` and
 `npm run build` so Sandcastle prompts work out of the box.
 
-## Workflow — Sandcastle AFK factory (fully local)
+## Workflow — Sandcastle AFK factory (Docker-free local + GitHub Actions)
 
-Nothing agent-driven runs in GitHub Actions. The owner runs the factory on
-their machine; sandboxes never see credentials (host `gh` auth does all
-GitHub operations outside the sandbox where needed, the merger closes issues
-from inside via the sandbox `gh` CLI).
+Sandcastle runs without Docker by default (`noSandbox()` + native git worktrees
+under `.sandcastle/worktrees/`) both locally on your laptop and in GitHub
+Actions (`.github/workflows/sandcastle.yml`). Container mode remains available
+via `SANDCASTLE_SANDBOX=docker` or `SANDCASTLE_SANDBOX=podman`.
 
 0. **Backlog:** issues carrying the `Sandcastle` label are the planner's input.
    Triage (`/triage`) moves specs through `needs-triage` → `needs-info` /
    `ready-for-agent` / `ready-for-human` / `wontfix` with `bug`/`enhancement`.
    Only `ready-for-agent` + `Sandcastle` issues get planned.
-1. **Run:** `cp .sandcastle/.env.example .sandcastle/.env` (fill
-   `OPENCODE_API_KEY` + `GH_TOKEN` once), build the image once
-   (`npx @ai-hero/sandcastle docker build-image`), then
-   `npm run sandcastle` from the branch you want merged into
-   (usually `main`).
-2. **What happens:** up to 10 plan → execute → merge cycles. The planner
-   emits `<plan>` JSON with unblocked issues and deterministic
-   `sandcastle/issue-{id}` branches. Each issue gets its own sandbox:
-   implementer (RGR, commits with `RALPH:` prefix) then reviewer (same
-   sandbox, same branch, per `.sandcastle/CODING_STANDARDS.md`). The merger
-   merges completed branches into the current branch, runs verification,
-   and closes their issues (`Completed by Sandcastle`).
-3. **Work rules inside a sandbox:** change only what the issue scopes. Small
+1. **Run locally (no Docker):** `npm run sandcastle` from the branch you want
+   merged into (usually `main`). Uses host `opencode` + `gh` auth (or
+   `.sandcastle/.env` if present) and creates an isolated git worktree per issue.
+2. **Run on GitHub Actions:** Either:
+   - Label an issue with both `Sandcastle` and `ready-for-agent` (triggers
+     `sandcastle.yml` automatically), or
+   - Run `npm run sandcastle:gh` (pushes merged commits to `main` and deploys)
+     or `npm run sandcastle:gh:pr` (opens a PR).
+   - Required repository secret in GitHub: `OPENCODE_API_KEY` (and optional
+     `SANDCASTLE_GH_TOKEN` if you prefer a PAT over the built-in `GITHUB_TOKEN`).
+3. **What happens:** up to `SANDCASTLE_MAX_ITERATIONS` (default 10 locally, 5 in
+   Actions) plan → execute → merge cycles. The planner emits `<plan>` JSON with
+   unblocked issues and deterministic `sandcastle/issue-{id}` branches. Each
+   issue gets its own git worktree sandbox: implementer (RGR, commits with
+   `RALPH:` prefix) then reviewer (same worktree, same branch, per
+   `.sandcastle/CODING_STANDARDS.md`). The merger merges completed branches into
+   the current branch, runs verification, and closes their issues
+   (`Completed by Sandcastle`).
+4. **Work rules inside a sandbox:** change only what the issue scopes. Small
    commits, imperative messages. Obey the portability boundary, Worker env
-   bindings, Spotlight/Catalyst/MD3 design rules, and Plex metadata schema.
+   bindings, `@benalloway/ui` design rules, and Plex metadata schema.
    `npm run check` + `npm run build` green before finishing. Add the
    `CHANGES.md` entry (Change / Verify / Rollback) when production behavior
    changes. Output `<promise>COMPLETE</promise>` when done. Never read or echo
    secrets.
-4. **After a run:** review the merged result (`git log`, `npm run check` +
+5. **After a local run:** review the merged result (`git log`, `npm run check` +
    `npm run build`, `npm run preview` smoke). Push when happy. Merges to
    `main` deploy to production via CI.
 
