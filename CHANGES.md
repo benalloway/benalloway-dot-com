@@ -9,7 +9,20 @@ the previous version).
 
 ---
 
-## Unreleased — Oatmeal reskin + two-item nav (ADR-0004)
+## Unreleased — Apex URL architecture + recipes link (ADR-0005)
+
+Change: Home-page Recipes entry now points at `/recipes` (apex subpath)
+instead of the subdomain; recorded the site URL architecture (subpaths for
+sections, subdomains for services, subdomain 301 alias kept) in ADR-0005.
+
+Verify: `npm run check` + `npm run build` green; home-page Recipes button
+lands on `https://benalloway.com/recipes/` (200).
+
+Rollback: `npx wrangler rollback` (link + docs only).
+
+---
+
+## 2026-10-15 — Oatmeal reskin + two-item nav (ADR-0004)
 
 Change: Reskinned visuals/elements only to Oatmeal olive-instrument
 (olive tokens, Instrument Serif display + Inter, rounded-full pill buttons,
