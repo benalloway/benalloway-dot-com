@@ -27,10 +27,10 @@ Key decisions:
   `Digital`) and A/V transfer specs. Exported at `/api/movies.json` in Plex
   `MediaContainer.Metadata` shape for seamless future Plex/D1 portability
 - **Repo & Agent Process:** 1:1 with `benalloway/recipes` (`AGENTS.md`,
-  `CONTRIBUTING.md`, `GLOSSARY.md`, `docs/adr/`, `.sandcastle/`, Pocock skills),
-  supporting both Docker-free local runs (`npm run sandcastle` via git
-  worktrees) and cloud GitHub Actions runs (`npm run sandcastle:gh` /
-  `.github/workflows/sandcastle.yml`).
+  `CONTRIBUTING.md`, `GLOSSARY.md`, `docs/adr/`, Forge factory, Pocock skills),
+  supporting both Docker-free local runs (`npm run forge` via git
+  worktrees) and cloud GitHub Actions runs (`npm run forge:gh` /
+  `.github/workflows/forge.yml`).
 
 ## Architecture
 

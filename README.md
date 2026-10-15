@@ -15,9 +15,9 @@ npm run build            # production build → dist/
 npm run preview          # wrangler dev against the built bundle (same as prod)
 npm run check            # astro sync && tsc --noEmit
 npm run ui:sync          # vendor latest @benalloway/ui (../ui) into src/components/ui/ + src/styles/global.css
-npm run sandcastle       # Docker-free local AFK agent factory (git worktrees + host opencode)
-npm run sandcastle:gh    # run Sandcastle AFK factory on GitHub Actions (push to main + deploy)
-npm run sandcastle:gh:pr # run Sandcastle AFK factory on GitHub Actions (open a PR)
+npm run forge            # Docker-free local AFK agent factory (git worktrees + host opencode)
+npm run forge:gh         # run Forge AFK factory on GitHub Actions (wrapper default delivery)
+npm run forge:gh:pr      # run Forge AFK factory on GitHub Actions (open a PR)
 ```
 
 ## Related repos in this workspace
@@ -25,7 +25,7 @@ npm run sandcastle:gh:pr # run Sandcastle AFK factory on GitHub Actions (open a 
 | Repo | Path / URL | Relationship to `benalloway-dot-com` |
 |---|---|---|
 | `@benalloway/ui` | `../ui` (`benalloway/ui`) | Canonical source of truth for design tokens (`src/styles/oatmeal.css`) and all 29 Astro UI primitives (`src/components/*.astro`). Edit UI primitives in `../ui`, commit there, then run `npm run ui:sync` (`bash scripts/sync-ui.sh`) here to vendor into `src/components/ui/` and `src/styles/global.css`. |
-| `recipes` | `../recipes` (`benalloway/recipes`) | Companion Astro + Cloudflare Workers + D1/R2 app served on `https://recipes.benalloway.com` (ADR-0005; `benalloway.com/recipes*` 301s there), sharing `@benalloway/ui` and the same Sandcastle + Pocock skills workflow. |
+| `recipes` | `../recipes` (`benalloway/recipes`) | Companion Astro + Cloudflare Workers + D1/R2 app served on `https://recipes.benalloway.com` (ADR-0005; `benalloway.com/recipes*` 301s there), sharing `@benalloway/ui` and the same Forge + Pocock skills workflow. |
 
 ## Adding content
 
@@ -41,14 +41,14 @@ reimplementing those files only — nothing else imports platform modules.
 ## Process (how humans & agents work here)
 
 - **Humans:** [CONTRIBUTING.md](./CONTRIBUTING.md) — idea → issue
-  (`needs-triage` + `Sandcastle`) → `/triage` → `ready-for-agent` + `Sandcastle`
-  (auto-runs on GitHub Actions or locally via `npm run sandcastle` without Docker) → live deploy.
+  (`needs-triage` + `Forge`) → `/triage` → `ready-for-agent` + `Forge`
+  (auto-runs on GitHub Actions or locally via `npm run forge` without Docker) → live deploy.
 - **Agents:** [AGENTS.md](./AGENTS.md) — stack invariants, cross-repo `@benalloway/ui`
-  vendoring rules, commands, and the Sandcastle factory (`planner` → parallel
+  vendoring rules, commands, and the Forge factory (`planner` → parallel
   `implementer` + `reviewer` in git worktrees → `merger`).
   Skill/vocabulary config: [`docs/agents/`](./docs/agents/),
   [`GLOSSARY.md`](./GLOSSARY.md), [`docs/adr/`](./docs/adr/).
-  Factory: [`.sandcastle/`](./.sandcastle/). Workflows (`ci.yml` + `sandcastle.yml`):
+  Factory: [`.forge/`](./.forge) (vendored — never hand-edit). Workflows (`ci.yml` + `forge.yml`):
   [.github/workflows/README.md](./.github/workflows/README.md).
 - **Replicate this setup** in a new repo: [docs/bootstrap.md](./docs/bootstrap.md)
-  + [`scripts/setup-labels.sh`](./scripts/setup-labels.sh).
+  + Forge [`docs/INSTALL.md`](https://github.com/benalloway/forge/blob/v1/docs/INSTALL.md).

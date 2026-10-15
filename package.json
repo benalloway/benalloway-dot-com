@@ -10,10 +10,7 @@
     "check": "astro sync && tsc --noEmit",
     "typecheck": "astro sync && tsc --noEmit",
     "test": "astro build",
-    "ui:sync": "bash scripts/sync-ui.sh",
-    "sandcastle": "npx tsx .sandcastle/main.ts",
-    "sandcastle:gh": "gh workflow run sandcastle.yml && sleep 2 && gh run watch",
-    "sandcastle:gh:pr": "gh workflow run sandcastle.yml -f delivery=pr && sleep 2 && gh run watch"
+    "ui:sync": "bash scripts/sync-ui.sh"
   },
   "repository": {
     "type": "git",
@@ -40,7 +37,6 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "@ai-hero/sandcastle": "^0.12.0",
     "@types/node": "^26.6.4",
     "tsx": "^4.23.15",
     "typescript": "7.0.2",
