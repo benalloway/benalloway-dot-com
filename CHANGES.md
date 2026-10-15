@@ -11,18 +11,16 @@ the previous version).
 
 ## Unreleased — Standalone public site UX + subdomain-app architecture (ADR-0005)
 
-Change: Removed the "Cookbook & Kitchen Notes" Recipes CTA card from the home
-page (`/`) so it focuses on bio + photo strip + articles (left column) +
-`Movies We Own` shelf snapshot (right column); header/footer nav unchanged
-(`Movies` + `Articles`). Updated ADR-0005 to the subdomain-app architecture:
-content sections stay on apex subpaths (`/movies`, `/articles`, this worker),
-standalone apps with their own auth/security posture live on subdomains
-(`recipes.benalloway.com`, recipes worker); `benalloway.com/recipes*` 301s to
-`https://recipes.benalloway.com/*` (zone redirect rule `apex-path
-consolidation`, ref `recipes-subdomain-to-apex-path`, direction reversed —
-human applies in dashboard). Recipes is a standalone app on
-`recipes.benalloway.com` (own host, own `Path=/` auth cookie, own app shell —
-implemented in `benalloway/recipes`).
+Change: Removed the Recipes CTA card from the home page (`/`) so it focuses
+on bio + photo strip + articles (left column) + `Movies We Own` shelf snapshot
+(right column); header/footer nav unchanged (`Movies` + `Articles`). Adopted
+the subdomain-app architecture (ADR-0005): apex subpaths stay content-only
+(`/movies`, `/articles`, this worker), the signed-in Recipes app lives at
+`recipes.benalloway.com` (`benalloway/recipes` repo), and
+`benalloway.com/recipes*` 301s to the subdomain (zone redirect rule
+`apex-path consolidation`, ref `recipes-subdomain-to-apex-path`; human applies
+in dashboard). This supersedes the earlier apex-path plan (Recipes entry at
+`/recipes`), which never shipped — its redirect direction is reversed.
 
 Verify: `npm run check` + `npm run build` green; `/` 200 with no recipes CTA,
 `/movies` + `/articles` 200.
@@ -48,19 +46,6 @@ Verify: `npm run check` + `npm run build` + `npm run sandcastle` green; live
 `/articles/favorite-movies`, `/api/movies.json`, and `/api/health`.
 
 Rollback: `npx wrangler rollback` (UI component refactor + automation only; no schema change).
-
----
-
-## Unreleased — Apex URL architecture + recipes link (ADR-0005)
-
-Change: Home-page Recipes entry now points at `/recipes` (apex subpath)
-instead of the subdomain; recorded the site URL architecture (subpaths for
-sections, subdomains for services, subdomain 301 alias kept) in ADR-0005.
-
-Verify: `npm run check` + `npm run build` green; home-page Recipes button
-lands on `https://benalloway.com/recipes/` (200).
-
-Rollback: `npx wrangler rollback` (link + docs only).
 
 ---
 

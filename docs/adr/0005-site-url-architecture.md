@@ -2,7 +2,7 @@
 
 Date: 2026-10-15
 Status: accepted
-Supersedes: 2026-10-15 apex-path consolidation decision (subdomain→apex 301 direction reversed)
+Supersedes: 2026-10-15 apex-path consolidation decision; reverses its redirect direction (subdomain→apex no longer applies).
 
 ## Context
 
@@ -31,11 +31,8 @@ Decision (owner-approved): treat them as separate products.
   cookie, own compact app shell — implemented in `benalloway/recipes`).
 - **Canonical move + permanent redirect:** `benalloway.com/recipes*` 301s to
   `https://recipes.benalloway.com/*` via the zone redirect rule
-  (`apex-path consolidation`, ref `recipes-subdomain-to-apex-path` — rule
-  direction reversed from the earlier subdomain→apex alias). Keep the redirect
-  forever — the canonical choice stays reversible. The old
-  `recipes.benalloway.com → benalloway.com/recipes` direction is reversed and
-  no longer applies.
+  (`apex-path consolidation`, ref `recipes-subdomain-to-apex-path`). Keep the
+  redirect indefinitely — a future ADR can revisit the canonical choice.
 - **Subdomains remain reserved for services too:** APIs, webhooks,
   staging/preview deployments, or anything with a different auth/security
   posture.

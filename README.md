@@ -25,7 +25,7 @@ npm run sandcastle:gh:pr # run Sandcastle AFK factory on GitHub Actions (open a 
 | Repo | Path / URL | Relationship to `benalloway-dot-com` |
 |---|---|---|
 | `@benalloway/ui` | `../ui` (`benalloway/ui`) | Canonical source of truth for design tokens (`src/styles/oatmeal.css`) and all 29 Astro UI primitives (`src/components/*.astro`). Edit UI primitives in `../ui`, commit there, then run `npm run ui:sync` (`bash scripts/sync-ui.sh`) here to vendor into `src/components/ui/` and `src/styles/global.css`. |
-| `recipes` | `../recipes` (`benalloway/recipes`) | Companion Astro + Cloudflare Workers + D1/R2 app served on `https://benalloway.com/recipes/*` (ADR-0005), sharing `@benalloway/ui` and the same Sandcastle + Pocock skills workflow. |
+| `recipes` | `../recipes` (`benalloway/recipes`) | Companion Astro + Cloudflare Workers + D1/R2 app served on `https://recipes.benalloway.com` (ADR-0005; `benalloway.com/recipes*` 301s there), sharing `@benalloway/ui` and the same Sandcastle + Pocock skills workflow. |
 
 ## Adding content
 

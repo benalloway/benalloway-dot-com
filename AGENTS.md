@@ -29,7 +29,8 @@ This repo works alongside two sibling repositories under `/home/benalloway/Work`
   `../ui`, commit in `../ui`, and run `npm run ui:sync` (`bash scripts/sync-ui.sh`)
   here so `scripts/ui-version.txt` and the vendored copies stay in lockstep.
 - **`recipes` (`../recipes`, `benalloway/recipes`):** Companion Astro + Cloudflare
-  Workers + D1/R2 app served at `https://benalloway.com/recipes/*` (ADR-0005).
+  Workers + D1/R2 app served at `https://recipes.benalloway.com` (ADR-0005;
+  `benalloway.com/recipes*` 301s there).
   Uses the same `@benalloway/ui` design kit (`scripts/sync-ui.sh`) and the same
   Sandcastle + Pocock skills workflow. Do not modify `../recipes` when working
   on an issue scoped to `benalloway-dot-com`.
