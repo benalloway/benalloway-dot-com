@@ -14,18 +14,17 @@ const { title, intro, eyebrow } = Astro.props;
   <header class="max-w-2xl">
     {
       eyebrow && (
-        <p class="mb-3 flex items-center text-xs font-semibold tracking-wider text-teal-600 uppercase dark:text-teal-400">
-          <span class="mr-3 h-4 w-0.5 rounded-full bg-teal-500 dark:bg-teal-400" aria-hidden="true" />
+        <div class="mb-2 text-sm/7 font-semibold text-olive-700 dark:text-olive-400">
           {eyebrow}
-        </p>
+        </div>
       )
     }
-    <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+    <h1 class="font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-[5rem]/20 dark:text-white">
       {title}
     </h1>
-    <p class="mt-6 text-base text-zinc-600 dark:text-zinc-400">
+    <div class="mt-6 text-base/7 text-pretty text-olive-700 dark:text-olive-400">
       {intro}
-    </p>
+    </div>
   </header>
   <div class="mt-12 sm:mt-16">
     <slot />

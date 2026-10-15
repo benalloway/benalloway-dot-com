@@ -19,7 +19,7 @@ const entries = (await getCollection('articles')).sort((a, b) =>
     title="Pages, movie lists, and notes."
     intro="Long-form lists, wiki reference pages, film essays, and occasional life updates — authored in Markdown and organized chronologically."
   >
-    <div class="md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40">
+    <div class="md:border-l md:border-olive-950/10 md:pl-6 md:dark:border-white/10">
       <div class="flex max-w-3xl flex-col space-y-16">
         {
           entries.map((entry) => (
@@ -36,7 +36,7 @@ const entries = (await getCollection('articles')).sort((a, b) =>
               </div>
               <time
                 datetime={entry.data.publishedAt}
-                class="relative z-10 order-first mt-1 mb-3 hidden items-center text-sm text-zinc-400 md:flex dark:text-zinc-500"
+                class="relative z-10 order-first mt-1 mb-3 hidden items-center text-sm text-olive-700 md:flex dark:text-olive-400"
               >
                 {formatDate(entry.data.publishedAt)}
               </time>

@@ -9,6 +9,23 @@ the previous version).
 
 ---
 
+## Unreleased — Oatmeal reskin + two-item nav (ADR-0004)
+
+Change: Reskinned visuals/elements only to Oatmeal olive-instrument
+(olive tokens, Instrument Serif display + Inter, rounded-full pill buttons,
+tonal badges, sticky olive navbar, full-screen olive mobile menu; layouts,
+routes, and Plex data untouched). Reduced header + footer nav to exactly
+`Movies` (`/movies`) + `Articles` (`/articles`).
+
+Verify: `npm run check` + `npm run build` green; Playwright desktop + mobile
+screenshots of `/`; `curl` 200s for `/`, `/movies`,
+`/movies/the-fellowship-of-the-ring`, `/articles`,
+`/articles/favorite-movies`, `/api/movies.json`.
+
+Rollback: `npx wrangler rollback` (visuals + nav config only; no schema change).
+
+---
+
 ## 2026-10-15 — M0: initial launch of benalloway.com
 
 Change: Scaffolded `benalloway-dot-com` from `benalloway/recipes` framework

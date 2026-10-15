@@ -1,16 +1,18 @@
 ---
 /**
- * Catalyst UI Kit Badge — ported 1:1 to Astro.
+ * Oatmeal announcement-badge visuals with Catalyst color API kept stable.
+ * Strong colors (teal/emerald/indigo) render as solid olive pills;
+ * the rest render as soft olive tonal pills.
  */
 const colors = {
-  teal: 'bg-teal-500/15 text-teal-700 dark:bg-teal-500/10 dark:text-teal-300',
-  zinc: 'bg-zinc-600/10 text-zinc-700 dark:bg-white/5 dark:text-zinc-400',
-  amber: 'bg-amber-400/20 text-amber-700 dark:bg-amber-400/10 dark:text-amber-400',
-  indigo: 'bg-indigo-500/15 text-indigo-700 dark:bg-indigo-500/10 dark:text-indigo-400',
-  emerald: 'bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400',
-  sky: 'bg-sky-500/15 text-sky-700 dark:bg-sky-500/10 dark:text-sky-300',
-  rose: 'bg-rose-400/15 text-rose-700 dark:bg-rose-400/10 dark:text-rose-400',
-  purple: 'bg-purple-500/15 text-purple-700 dark:bg-purple-500/10 dark:text-purple-400',
+  teal: 'bg-olive-950 text-white dark:bg-olive-300 dark:text-olive-950',
+  emerald: 'bg-olive-950 text-white dark:bg-olive-300 dark:text-olive-950',
+  indigo: 'bg-olive-950 text-white dark:bg-olive-300 dark:text-olive-950',
+  zinc: 'bg-olive-950/5 text-olive-950 dark:bg-white/5 dark:text-white dark:inset-ring-1 dark:inset-ring-white/5',
+  amber: 'bg-olive-950/5 text-olive-950 dark:bg-white/5 dark:text-white dark:inset-ring-1 dark:inset-ring-white/5',
+  sky: 'bg-olive-950/5 text-olive-950 dark:bg-white/5 dark:text-white dark:inset-ring-1 dark:inset-ring-white/5',
+  rose: 'bg-olive-950/5 text-olive-950 dark:bg-white/5 dark:text-white dark:inset-ring-1 dark:inset-ring-white/5',
+  purple: 'bg-olive-950/5 text-olive-950 dark:bg-white/5 dark:text-white dark:inset-ring-1 dark:inset-ring-white/5',
 } as const;
 
 interface Props {
@@ -23,7 +25,7 @@ const { color = 'zinc', class: className = '' } = Astro.props;
 
 <span
   class:list={[
-    'inline-flex items-center gap-x-1.5 rounded-md px-2 py-0.5 text-xs/5 font-medium forced-colors:outline',
+    'inline-flex max-w-full items-center gap-x-1.5 rounded-full px-3 py-0.5 text-sm/6 font-medium',
     colors[color],
     className,
   ]}

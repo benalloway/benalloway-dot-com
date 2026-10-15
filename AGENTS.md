@@ -32,12 +32,14 @@ context after. 1:1 with `mattpocock/skills` + `mattpocock/sandcastle`
   `OPENCODE_API_KEY` + `GH_TOKEN` (fine-grained PAT: Issues RW, Metadata R —
   the sandbox's `gh` uses it to read/close issues). Never add Cloudflare
   account IDs or session keys.
-- **Design system (ADR-0002):** Tailwind CSS v4 (`@tailwindcss/vite`) porting
-  Tailwind Plus **Spotlight** (zinc/teal palette, framed `max-w-7xl` center
-  sheet, floating pill navigation, `.prose-spotlight` editorial typography,
-  light/dark mode) + **Catalyst UI Kit** (`Badge`, `Button`, `DescriptionList`,
-  filter controls) + **MD3 mobile UX** (`min-h-11` / `48px` touch targets,
-  `TouchTarget` hit-area expansion, accessible `<dialog>` mobile menu).
+- **Design system (ADR-0004, visuals-only over ADR-0002):** Tailwind CSS v4
+  (`@tailwindcss/vite`) porting Tailwind Plus **Oatmeal olive-instrument**
+  visuals/elements only (olive tokens, Instrument Serif display + Inter,
+  rounded-full pill buttons, tonal badges, sticky olive navbar, full-screen
+  olive mobile menu; layouts/IA untouched) + **Catalyst UI Kit** (`Badge`,
+  `Button`, `DescriptionList`, filter controls) + **MD3 mobile UX**
+  (`min-h-11` / `48px` touch targets, `TouchTarget` hit-area expansion,
+  accessible `<dialog>` mobile menu). Nav IA is `Movies` + `Articles` only.
 - **Plex-portable movie metadata (ADR-0003):** Movie entries in
   `src/data/movies.ts` are validated by `MovieSchema` and preserve 1:1 Plex
   `Metadata` field semantics (`title`, `sortTitle`, `originalTitle`, `year`,

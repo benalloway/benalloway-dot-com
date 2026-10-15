@@ -29,28 +29,28 @@ const photos = [
   title="Home"
   description="Ben Alloway — personal wiki, physical movie collection, favorite films, and notes."
 >
-  <!-- Hero / About Section (Spotlight layout) -->
+  <!-- Hero / About Section (Oatmeal hero-left-aligned visuals) -->
   <Container class="mt-10 sm:mt-16">
     <div class="max-w-2xl">
-      <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-teal-500/10 px-3 py-1 text-xs font-semibold text-teal-700 dark:bg-teal-400/10 dark:text-teal-300">
+      <div class="mb-4 inline-flex max-w-full items-center rounded-full bg-olive-950/5 px-3 py-0.5 text-sm/6 font-medium text-olive-950 dark:bg-white/5 dark:text-white">
         <span>Personal Wiki & Digital Shelf</span>
       </div>
-      <h1 class="text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+      <h1 class="font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-[5rem]/20 dark:text-white">
         Hi, I’m Ben Alloway. Welcome to my corner of the web.
       </h1>
-      <p class="mt-6 text-base/7 text-zinc-600 dark:text-zinc-400">
+      <div class="mt-6 max-w-2xl text-base/7 text-pretty text-olive-700 sm:text-lg/8 dark:text-olive-400">
         I’m a software builder based in Virginia. This site is my personal wiki
         and living notebook — a place to catalog the physical movies we own
         (structured for our future Plex server), share ranked lists like my
         all-time favorite films, and publish notes and life updates along the way.
-      </p>
+      </div>
 
       <!-- Primary Mobile-Friendly Quick-Start Menu Actions (MD3 48px+ touch targets) -->
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        <Button href="/movies" variant="teal">
+        <Button href="/movies" variant="primary" size="lg">
           Browse Movies We Own ({movies.length}) →
         </Button>
-        <Button href="/articles/favorite-movies" variant="secondary">
+        <Button href="/articles/favorite-movies" variant="secondary" size="lg">
           Read: My Top 20 Favorite Movies
         </Button>
         <a
@@ -58,7 +58,7 @@ const photos = [
           target="_blank"
           rel="noreferrer"
           aria-label="Ben Alloway on GitHub"
-          class="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-zinc-600 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+          class="inline-flex min-h-11 items-center gap-2 rounded-full px-3 py-1 text-sm/7 font-medium text-olive-950 transition hover:bg-olive-950/10 dark:text-white dark:hover:bg-white/10"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true" class="size-5 fill-current">
             <path
@@ -73,14 +73,14 @@ const photos = [
     </div>
   </Container>
 
-  <!-- Spotlight Tilted Photo Gallery Strip (Ready for your personal photos) -->
+  <!-- Tilted Photo Gallery Strip (Ready for your personal photos) -->
   <div class="mt-14 sm:mt-20">
     <div class="-my-4 flex justify-center gap-4 overflow-hidden py-4 sm:gap-8">
       {
         photos.map((photo) => (
           <div
             class:list={[
-              'relative w-40 flex-none overflow-hidden rounded-xl bg-zinc-100 shadow-md ring-1 ring-zinc-900/5 sm:w-64 sm:rounded-2xl dark:bg-zinc-800 dark:ring-white/10',
+              'relative w-40 flex-none overflow-hidden rounded-xl bg-olive-950/5 shadow-md ring-1 ring-olive-950/10 sm:w-64 sm:rounded-2xl dark:bg-white/5 dark:ring-white/10',
               photo.rotate,
             ]}
           >
@@ -98,14 +98,14 @@ const photos = [
     </div>
   </div>
 
-  <!-- Main Two-Column Spotlight Content Area -->
+  <!-- Main Two-Column Content Area -->
   <Container class="mt-20 md:mt-28">
     <div class="mx-auto grid max-w-xl grid-cols-1 gap-y-16 lg:max-w-none lg:grid-cols-2">
       <!-- Left Column: Featured Wiki Pages & Articles -->
       <div>
-        <h2 class="mb-8 text-xs font-semibold tracking-wider text-zinc-400 uppercase dark:text-zinc-500">
+        <div class="mb-8 text-sm/7 font-semibold text-olive-700 dark:text-olive-400">
           Starting Content · Wiki & Articles
-        </h2>
+        </div>
         <div class="flex flex-col gap-14">
           {
             articles.map((article) => (
@@ -124,9 +124,9 @@ const photos = [
 
       <!-- Right Column: Movie Database Shelf Snapshot + Quick Links -->
       <div class="space-y-8 lg:pl-16 xl:pl-24">
-        <section class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
+        <section class="rounded-2xl border border-olive-950/10 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
           <div class="flex items-center justify-between gap-2">
-            <h2 class="flex items-center text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <h2 class="flex items-center text-sm/7 font-semibold text-olive-950 dark:text-white">
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -142,41 +142,41 @@ const photos = [
                   width="18.5"
                   height="14.5"
                   rx="2.5"
-                  class="fill-zinc-100 stroke-zinc-400 dark:fill-zinc-100/10 dark:stroke-zinc-500"
+                  class="fill-olive-950/5 stroke-olive-700 dark:fill-white/5 dark:stroke-olive-400"
                 ></rect>
                 <path
                   d="M7 5v14M17 5v14M3 9.5h4M17 9.5h4M3 14.5h4M17 14.5h4"
-                  class="stroke-zinc-400 dark:stroke-zinc-500"></path>
+                  class="stroke-olive-700 dark:stroke-olive-400"></path>
               </svg>
               <span class="ml-3">Movies We Own</span>
             </h2>
             <Badge color="teal">{movies.length} Titles</Badge>
           </div>
 
-          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div class="mt-2 text-sm/7 text-olive-700 dark:text-olive-400">
             Physical media collection indexed with Plex-compatible metadata
             (<code class="font-mono text-xs">sortTitle</code>,{' '}
             <code class="font-mono text-xs">editionTitle</code>, IMDb/TMDb GUIDs).
-          </p>
+          </div>
 
           <!-- Format Breakdown Pills -->
           <div class="mt-4 grid grid-cols-2 gap-3">
-            <div class="rounded-xl bg-zinc-50 px-3.5 py-2.5 dark:bg-zinc-800/60">
-              <div class="text-xs text-zinc-500 dark:text-zinc-400">4K UHD Discs</div>
-              <div class="mt-0.5 text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            <div class="rounded-xl bg-olive-950/5 px-3.5 py-2.5 dark:bg-white/5">
+              <div class="text-xs text-olive-700 dark:text-olive-400">4K UHD Discs</div>
+              <div class="mt-0.5 font-display text-2xl text-olive-950 dark:text-white">
                 {uhdCount}
               </div>
             </div>
-            <div class="rounded-xl bg-zinc-50 px-3.5 py-2.5 dark:bg-zinc-800/60">
-              <div class="text-xs text-zinc-500 dark:text-zinc-400">Blu-ray Discs</div>
-              <div class="mt-0.5 text-lg font-bold text-zinc-900 dark:text-zinc-100">
+            <div class="rounded-xl bg-olive-950/5 px-3.5 py-2.5 dark:bg-white/5">
+              <div class="text-xs text-olive-700 dark:text-olive-400">Blu-ray Discs</div>
+              <div class="mt-0.5 font-display text-2xl text-olive-950 dark:text-white">
                 {blurayCount}
               </div>
             </div>
           </div>
 
           <!-- Sample Shelf Highlights -->
-          <ol class="mt-6 divide-y divide-zinc-100 dark:divide-zinc-800">
+          <ol class="mt-6 divide-y divide-olive-950/10 dark:divide-white/10">
             {
               spotlightMovies.map((movie) => (
                 <li class="py-2.5 first:pt-0 last:pb-0">
@@ -185,15 +185,15 @@ const photos = [
                     class="group flex min-h-11 items-center justify-between gap-3"
                   >
                     <div class="min-w-0">
-                      <p class="truncate text-sm font-medium text-zinc-900 transition group-hover:text-teal-600 dark:text-zinc-100 dark:group-hover:text-teal-400">
+                      <p class="truncate text-sm font-medium text-olive-950 transition group-hover:opacity-60 dark:text-white">
                         {movie.title}
                       </p>
-                      <p class="text-xs text-zinc-500 dark:text-zinc-400">
+                      <p class="text-xs text-olive-700 dark:text-olive-400">
                         {movie.year} · {movie.directors[0]}
                         {movie.editionTitle ? ` · ${movie.editionTitle}` : ''}
                       </p>
                     </div>
-                    <Badge color={movie.mediaFormat === '4K UHD' ? 'teal' : 'indigo'}>
+                    <Badge color={movie.mediaFormat === '4K UHD' ? 'teal' : 'zinc'}>
                       {movie.mediaFormat}
                     </Badge>
                   </a>
@@ -202,22 +202,22 @@ const photos = [
             }
           </ol>
 
-          <Button href="/movies" variant="secondary" class="mt-6 w-full">
+          <Button href="/movies" variant="secondary" class="mt-6 w-full" size="lg">
             Explore Full Movie Database →
           </Button>
         </section>
 
         <!-- Sister App Card -->
-        <section class="rounded-2xl border border-zinc-100 p-6 dark:border-zinc-700/40">
-          <h2 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+        <section class="rounded-2xl border border-olive-950/10 bg-white/60 p-6 dark:border-white/10 dark:bg-white/5">
+          <h2 class="text-sm/7 font-semibold text-olive-950 dark:text-white">
             More on benalloway.com
           </h2>
-          <p class="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div class="mt-2 text-sm/7 text-olive-700 dark:text-olive-400">
             Looking for our family cookbook and capsule meal planner? It runs on
             the same Astro 7 + Cloudflare Workers stack at:
-          </p>
+          </div>
           <div class="mt-4">
-            <Button href="https://recipes.benalloway.com" variant="secondary" class="w-full">
+            <Button href="https://recipes.benalloway.com" variant="secondary" class="w-full" size="lg">
               recipes.benalloway.com ↗
             </Button>
           </div>

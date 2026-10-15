@@ -32,7 +32,7 @@ const {
       <a
         href={backHref}
         aria-label={backLabel}
-        class="group relative mb-8 inline-flex size-11 items-center justify-center rounded-full bg-white shadow-md ring-1 shadow-zinc-800/5 ring-zinc-900/5 transition lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20"
+        class="group relative mb-8 inline-flex size-11 items-center justify-center rounded-full text-olive-950 transition hover:bg-olive-950/10 lg:absolute lg:-left-5 lg:-mt-2 lg:mb-0 xl:-top-1.5 xl:left-0 xl:mt-0 dark:text-white dark:hover:bg-white/10"
       >
         <span
           class="absolute top-1/2 left-1/2 size-[max(100%,3rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
@@ -41,7 +41,7 @@ const {
           viewBox="0 0 16 16"
           fill="none"
           aria-hidden="true"
-          class="size-4 stroke-zinc-500 transition group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"
+          class="size-4 stroke-current"
         >
           <path
             d="M7.25 11.25 3.75 8m0 0 3.5-3.25M3.75 8h8.5"
@@ -53,11 +53,8 @@ const {
 
       <article>
         <header class="flex flex-col">
-          <div class="order-first flex flex-wrap items-center gap-3 text-sm text-zinc-400 dark:text-zinc-500">
-            <time datetime={publishedAt} class="flex items-center">
-              <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" aria-hidden="true"></span>
-              <span class="ml-3">{formatDate(publishedAt)}</span>
-            </time>
+          <div class="order-first flex flex-wrap items-center gap-3 text-sm/7 text-olive-700 dark:text-olive-400">
+            <time datetime={publishedAt}>{formatDate(publishedAt)}</time>
             {
               updatedAt && updatedAt !== publishedAt && (
                 <span>· Updated {formatDate(updatedAt)}</span>
@@ -66,13 +63,13 @@ const {
             <Badge color="teal">{category}</Badge>
           </div>
 
-          <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 sm:text-5xl dark:text-zinc-100">
+          <h1 class="mt-6 font-display text-5xl/12 tracking-tight text-balance text-olive-950 sm:text-6xl/16 dark:text-white">
             {title}
           </h1>
 
-          <p class="mt-4 text-lg text-zinc-600 dark:text-zinc-400">
+          <div class="mt-6 text-lg/8 text-pretty text-olive-700 dark:text-olive-400">
             {description}
-          </p>
+          </div>
 
           {
             tags.length > 0 && (

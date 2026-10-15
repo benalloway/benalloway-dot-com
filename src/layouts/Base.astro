@@ -25,6 +25,16 @@ const pageTitle =
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
     <title>{pageTitle}</title>
     <script is:inline>
       (() => {
@@ -42,20 +52,11 @@ const pageTitle =
       })();
     </script>
   </head>
-  <body class="flex min-h-full bg-zinc-50 text-zinc-800 dark:bg-black dark:text-zinc-200">
-    <div class="flex w-full">
-      <div class="fixed inset-0 flex justify-center sm:px-8">
-        <div class="flex w-full max-w-7xl lg:px-8">
-          <div class="w-full bg-white ring-1 ring-zinc-100 dark:bg-zinc-900 dark:ring-zinc-300/20"></div>
-        </div>
-      </div>
-      <div class="relative flex w-full flex-col">
-        <Header />
-        <main class="flex-auto">
-          <slot />
-        </main>
-        <Footer />
-      </div>
-    </div>
+  <body class="bg-olive-100 font-sans text-olive-950 dark:bg-olive-950 dark:text-white">
+    <Header />
+    <main class="isolate overflow-clip">
+      <slot />
+    </main>
+    <Footer />
   </body>
 </html>

@@ -1,19 +1,22 @@
 ---
 /**
- * Spotlight + Catalyst Button with MD3 / Catalyst TouchTarget expansion.
+ * Oatmeal Button elements (button.tsx) + MD3 TouchTarget expansion.
+ * Variant names kept stable so pages don't churn: primary = Oatmeal
+ * dark/light, secondary = Oatmeal soft, teal = primary alias.
  */
 const variantStyles = {
   primary:
-    'bg-zinc-800 font-semibold text-zinc-100 hover:bg-zinc-700 active:bg-zinc-800 active:text-zinc-100/70 dark:bg-zinc-700 dark:hover:bg-zinc-600 dark:active:bg-zinc-700 dark:active:text-zinc-100/70',
+    'bg-olive-950 text-white hover:bg-olive-800 active:bg-olive-800 dark:bg-olive-300 dark:text-olive-950 dark:hover:bg-olive-200 dark:active:bg-olive-200',
   secondary:
-    'bg-zinc-50 font-medium text-zinc-900 ring-1 ring-zinc-900/10 hover:bg-zinc-100 active:bg-zinc-100 active:text-zinc-900/60 dark:bg-zinc-800/50 dark:text-zinc-300 dark:ring-white/10 dark:hover:bg-zinc-800 dark:hover:text-zinc-50 dark:active:bg-zinc-800/50 dark:active:text-zinc-50/70',
+    'bg-olive-950/10 text-olive-950 hover:bg-olive-950/15 active:bg-olive-950/15 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 dark:active:bg-white/20',
   teal:
-    'bg-teal-600 font-semibold text-white hover:bg-teal-500 active:bg-teal-600 dark:bg-teal-500 dark:text-zinc-950 dark:hover:bg-teal-400',
+    'bg-olive-950 text-white hover:bg-olive-800 active:bg-olive-800 dark:bg-olive-300 dark:text-olive-950 dark:hover:bg-olive-200 dark:active:bg-olive-200',
 } as const;
 
 interface Props {
   href?: string;
   variant?: keyof typeof variantStyles;
+  size?: 'md' | 'lg';
   type?: 'button' | 'submit' | 'reset';
   class?: string;
 }
@@ -21,17 +24,19 @@ interface Props {
 const {
   href,
   variant = 'primary',
+  size = 'md',
   type = 'button',
   class: className = '',
 } = Astro.props;
 
+const sizeClass = size === 'lg' ? 'px-4 py-2' : 'px-3 py-1';
 const baseClass =
-  'relative isolate inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm outline-offset-2 transition active:transition-none';
+  'relative isolate inline-flex min-h-11 shrink-0 items-center justify-center gap-1 rounded-full text-sm/7 font-medium transition active:transition-none';
 ---
 
 {
   href ? (
-    <a href={href} class:list={[baseClass, variantStyles[variant], className]}>
+    <a href={href} class:list={[baseClass, sizeClass, variantStyles[variant], className]}>
       <span
         class="absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
         aria-hidden="true"
@@ -41,7 +46,7 @@ const baseClass =
   ) : (
     <button
       type={type}
-      class:list={[baseClass, variantStyles[variant], className]}
+      class:list={[baseClass, sizeClass, variantStyles[variant], className]}
     >
       <span
         class="absolute top-1/2 left-1/2 size-[max(100%,2.75rem)] -translate-x-1/2 -translate-y-1/2 pointer-fine:hidden"
