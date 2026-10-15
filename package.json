@@ -10,7 +10,10 @@
     "check": "astro sync && tsc --noEmit",
     "typecheck": "astro sync && tsc --noEmit",
     "test": "astro build",
-    "ui:sync": "bash scripts/sync-ui.sh"
+    "ui:sync": "bash scripts/sync-ui.sh",
+    "forge": "npx tsx .forge/main.ts",
+    "forge:gh": "gh workflow run forge.yml && sleep 2 && gh run watch",
+    "forge:gh:pr": "gh workflow run forge.yml -f delivery=pr && sleep 2 && gh run watch"
   },
   "repository": {
     "type": "git",
