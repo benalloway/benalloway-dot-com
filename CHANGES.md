@@ -9,7 +9,30 @@ the previous version).
 
 ---
 
-## Unreleased — Standalone public site UX + subdomain-app architecture (ADR-0005)
+## 2026-10-18 — `/draftkit` route: live auction draft desk (owner-directed exception to ADR-0005)
+
+Change: Added `src/pages/draftkit.ts` serving the Fantrax basketball auction
+draft desk at `https://benalloway.com/draftkit`, byte-identical to
+`final-draft-kit/5-live-desk.html` (copied verbatim to
+`src/assets/draftkit/5-live-desk.html`, imported with Vite `?raw`). Trailing
+slash `/draftkit/` 308s to `/draftkit`. League rules PDF copied verbatim to
+`public/` so the page's relative link resolves at the apex. Static route only —
+no nav/header changes, no schema change. Owner explicitly directed apex-path
+placement in-conversation; supersedes ADR-0005 subdomain placement for this
+single page (a separate `draftkit` subdomain Worker was deployed first and is
+being retired).
+
+Verify: `npm run check` + `npm run build` green; `npm run preview` → `/draftkit`
+200 with sha256 matching the source desk file, `/draftkit/` → 308, rules PDF →
+200; production checks below.
+
+Rollback: `npx wrangler rollback` (adds one route + two static files; no
+schema/config change). Then remove `src/pages/draftkit.ts`,
+`src/assets/draftkit/`, and `public/Fantasy Basketball Keeper Rules - Google
+Docs.pdf`.
+
+---
+
 
 Change: Removed the Recipes CTA card from the home page (`/`) so it focuses
 on bio + photo strip + articles (left column) + `Movies We Own` shelf snapshot
