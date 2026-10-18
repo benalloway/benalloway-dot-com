@@ -9,7 +9,27 @@ the previous version).
 
 ---
 
-## 2026-10-18 (later) — `/draftkit` board: no scroll-within-scroll; sticky header under budget pin
+## 2026-10-18 (later) — `/draftkit`: Go-live mode + serverless sync link
+
+Change: Header gains “Go live” toggle (persists in state/backups) — `body.live`
+hides budget summary, guide, board, all side panels, notices and footer, leaving
+only the sticky budget strip, bid guide and header tools; phone thumb-nav hides
+too since its targets are gone. Header also gains “Copy sync link”: full draft
+state (sales, notes, stops, picks, names, selected player) base64url-encoded
+into the URL hash — opening it on another device imports via the existing
+backup validator, then strips the hash. No server, no account, offline-safe.
+Guide documents both. No ledger/pricing logic touched.
+
+Verify: 27/27 logic tests, 23/23 browser scenarios (live-mode hide/persist/exit;
+sync copy → second-page import with cash cross-check + hash cleanup + damaged
+link rejection). Production `https://benalloway.com/draftkit` 200,
+byte-identical to kit source, live toggle + sync copy exercised on the live
+page.
+
+Rollback: `npx wrangler rollback`.
+
+---
+
 
 Change: Removed the Player Board's internal scroll container (board renders
 full-height in the page scroll, like the side panels). Sticky table header now

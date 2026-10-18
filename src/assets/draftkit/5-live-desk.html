@@ -159,6 +159,18 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%}
 .mobile-board-help{display:none}
 .otb,#otb-heading,#board-heading,#league-heading{scroll-margin-top:var(--pin-offset,96px)}
 .budget-pin{top:0}
+/* ---- Live mode: one glance, one decision. Everything except the pinned
+   budget strip and the bid guide hides; storage warnings always stay. ---- */
+body.live .summary,
+body.live .quick-guide,
+body.live .board-panel,
+body.live aside,
+body.live footer,
+body.live .touch-nav,
+body.live .notice:not(#storage-notice){display:none!important}
+body.live .otb-name{font-size:32px}
+body.live .bid-advice strong{font-size:24px}
+body.live .page-header{margin-bottom:12px}
 /* Coarse pointers (your T14s touchscreen + phones): guarantee 44px targets */
 @media (pointer:coarse){
   button,select,input[type=number],input[type=search],input[type=text]{min-height:var(--tap)}
@@ -229,6 +241,8 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%}
     <p class="subtitle">8 teams · $200 draft budget · 14 auction picks · 3G / 3F / 2C / 2Flex · IR extra only during the season</p>
   </div>
   <nav class="actions" aria-label="Draft tools">
+    <button id="live-toggle" type="button" aria-pressed="false">Go live</button>
+    <button id="sync-link" type="button">Copy sync link</button>
     <button id="copy-ai" type="button">Copy AI state</button>
     <button id="export-backup" type="button">Export backup</button>
     <button id="import-backup" type="button">Import backup</button>
@@ -270,7 +284,7 @@ html{touch-action:manipulation;-webkit-text-size-adjust:100%}
 <details class="quick-guide">
   <summary>How to use this desk · tags, prices and league assumptions</summary>
   <div class="guide-grid">
-    <div><h3>Record, don’t guess</h3><p>Search the nominated player. Choose the winning team and enter the actual price. Empty bids never become $1 automatically. Tap a player name for details, your note and a personal stop. On a phone, use Scout for the bid guide and Record for the sale form.</p><p><b>Switching devices:</b> saves stay in this browser, not on Fantrax or your other devices. Export a backup here, transfer it and import it on your phone to continue. Keep one device as the active ledger to avoid conflicting copies.</p></div>
+    <div><h3>Record, don’t guess</h3><p>Search the nominated player. Choose the winning team and enter the actual price. Empty bids never become $1 automatically. Tap a player name for details, your note and a personal stop. On a phone, use Scout for the bid guide and Record for the sale form.</p><p><b>Going live:</b> “Go live” (top buttons) hides everything except the bid guide — verdict, stop, bid box, record. Use it during the draft; “Exit live” brings everything back.</p><p><b>Switching devices:</b> “Copy sync link” puts this exact desk state (sales, notes, stops, picks) into a link. Open it on your phone to continue there — no server, no account, works offline. Saves otherwise stay in each browser, not on Fantrax. Keep one device as the active ledger to avoid conflicting copies.</p></div>
     <div><h3>One pricing authority</h3><p>All 229 players, targets and default stops are copied unchanged from the war room. Inflation is that board’s heuristic—not a market quote or permission to exceed your stop. Current NBA news and individual game schedules have not been independently re-verified. <a href="Fantasy%20Basketball%20Keeper%20Rules%20-%20Google%20Docs.pdf" target="_blank" rel="noopener">Open league rules (PDF)</a>.</p></div>
     <div><h3>Read the decision, not a code</h3><p><b>✓ Like:</b> buy at the right price. Anchors are the five premium players; Stars are the other top-15 core targets; Targets are the rest of your core; Value means a Fantrax blindspot. <b>△ Caution:</b> traps, playoff risks and recovery stashes—not an automatic ban. <b>⊘ Avoid:</b> DND or your personal pass. Upside and depth are optional.</p><p><b>★ My pick</b> is your saved shortlist, separate from the Star tier. Favouriting a DND player never turns him into a recommendation. Original tags and projections remain unchanged in details.</p></div>
     <div><h3>14 picks, not 15</h3><p>Rules p1: every team drafts 14 players total. “Plan IR” still uses one of those picks and its salary. The extra IR spot applies during the season only; an eligible player is suspended, out or IR-tagged. Once eligibility ends, you have 48 hours to remove him or other transactions are blocked. The desk’s IR label is a plan, not a Fantrax status check.</p></div>
@@ -447,6 +461,7 @@ function defaultState() {
     avoided: [],
     fDecision: 'ALL', fMaxPrice: 200,
     selectedRkOv: 1,
+    live: false,
     nomTab: 'TRAP',
     fSearch: '', fPos: 'ALL', fTag: 'ALL', fView: '160', fSort: 'trueRk', hideSold: true
   };
@@ -475,6 +490,8 @@ function validateState(s) {
   if (s.avoided === undefined) s.avoided = [];
   if (s.fDecision === undefined) s.fDecision = 'ALL';
   if (s.fMaxPrice === undefined) s.fMaxPrice = 200;
+  if (s.live === undefined) s.live = false;
+  if (typeof s.live !== 'boolean') throw new Error('Invalid live mode.');
   if (!Array.isArray(s.teamNames) || s.teamNames.length !== NUM_TEAMS ||
       s.teamNames.some(n => typeof n !== 'string' || !n.trim() || n.length > 80)) {
     throw new Error('A backup must contain eight valid team names.');
@@ -519,6 +536,38 @@ function validateState(s) {
     if (!values.includes(s[key])) throw new Error('Invalid filter: ' + key);
   }
   return s;
+}
+
+/* ---------- cross-device sync link (no server: state travels in the URL hash) ---------- */
+const SYNC_FIELDS = ['teamNames', 'myTeam', 'sales', 'overrides', 'notes', 'shortlist', 'avoided', 'selectedRkOv'];
+function syncPayload() {
+  const o = { v: 1, datasetId: DATASET_ID };
+  for (const k of SYNC_FIELDS) o[k] = state[k];
+  return o;
+}
+function encodeSync(payload) {
+  const bytes = new TextEncoder().encode(JSON.stringify(payload));
+  let bin = '';
+  for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function decodeSync(str) {
+  let payload;
+  try {
+    const b64 = String(str).replace(/-/g, '+').replace(/_/g, '/');
+    const bin = atob(b64);
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    payload = JSON.parse(new TextDecoder().decode(bytes));
+  } catch (_) { throw new Error('That sync link is damaged or incomplete.'); }
+  if (!payload || payload.v !== 1) throw new Error('That sync link is from an unknown desk version.');
+  if (payload.datasetId !== DATASET_ID) throw new Error('That sync link is from a different player snapshot.');
+  const next = defaultState();
+  for (const k of SYNC_FIELDS) next[k] = payload[k];
+  return validateState(next);
+}
+function syncUrl() {
+  const base = location.origin && location.origin !== 'null' ? location.origin + location.pathname : location.href.split('#')[0];
+  return base + '#s=' + encodeSync(syncPayload());
 }
 if (BROADCAST) {
   BROADCAST.onmessage = ev => {
@@ -1018,6 +1067,12 @@ function renderAll() {
   const econ = computeEconomy();
   const mySales = state.sales.filter(x => x.team === state.myTeam);
   const ros = optimizeRoster(mySales);
+  document.body.classList.toggle('live', Boolean(state.live));
+  const liveBtn = document.getElementById('live-toggle');
+  if (liveBtn) {
+    liveBtn.textContent = state.live ? 'Exit live' : 'Go live';
+    liveBtn.setAttribute('aria-pressed', String(Boolean(state.live)));
+  }
   renderSummary(econ, ros);
   renderOTB(econ);
   renderNomination(econ);
@@ -1087,6 +1142,35 @@ function doRemove(rkOv) {
   const p = playerByRkOv.get(Number(rkOv));
   commit(Object.assign({}, state, { sales: state.sales.filter(x => x.rkOv !== p.rkOv) }));
   flash('Removed sale: ' + p.name);
+}
+function toggleLive() {
+  commit(Object.assign({}, state, { live: !state.live }));
+  if (state.live) {
+    document.getElementById('otb-heading').scrollIntoView({ block: 'start', behavior: 'instant' });
+    flash('Live mode: only the bid guide stays on screen. Exit live to see everything again.');
+  }
+}
+async function copySyncLink() {
+  const url = syncUrl();
+  try {
+    if (!navigator.clipboard) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(url);
+    flash('Sync link copied (' + Math.round(url.length / 102.4) / 10 + ' KB). Open it on your other device; it loads this exact desk state.');
+  } catch (_) {
+    download('draft-sync-link.txt', url, 'text/plain');
+    flash('Clipboard blocked — downloaded the sync link as a file instead. Open it on your other device.');
+  }
+}
+function importSyncHash() {
+  if (!location.hash || location.hash.slice(0, 3) !== '#s=') return;
+  const raw = location.hash.slice(3);
+  try {
+    commit(decodeSync(raw));
+    flash('Synced: this device now matches the link. ' + state.sales.length + ' sales loaded.');
+  } catch (err) {
+    flash('Sync failed: ' + err.message);
+  }
+  history.replaceState(null, '', location.pathname + location.search);
 }
 function toggleShortlist(rkOv) {
   const id = Number(rkOv);
@@ -1492,6 +1576,8 @@ function initDesk() {
     flash('Desk reset.');
   });
   document.getElementById('copy-ai').addEventListener('click', copyAIState);
+  document.getElementById('live-toggle').addEventListener('click', toggleLive);
+  document.getElementById('sync-link').addEventListener('click', copySyncLink);
   document.getElementById('export-backup').addEventListener('click', () => {
     download('draft-backup-' + new Date().toISOString().replace(/[:.]/g, '-') + '.json',
       JSON.stringify(state, null, 2), 'application/json');
@@ -1526,6 +1612,7 @@ function initDesk() {
   document.getElementById('print').addEventListener('click', () => window.print());
 
   renderAll();
+  importSyncHash();
   if (startupStorageError) showStorageNotice(startupStorageError);
   document.documentElement.dataset.draftReady = 'true';
 }
