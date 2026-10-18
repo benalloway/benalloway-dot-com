@@ -9,7 +9,27 @@ the previous version).
 
 ---
 
-## 2026-10-18 — `/draftkit` route: live auction draft desk (owner-directed exception to ADR-0005)
+## 2026-10-18 (later) — `/draftkit` board: no scroll-within-scroll; sticky header under budget pin
+
+Change: Removed the Player Board's internal scroll container (board renders
+full-height in the page scroll, like the side panels). Sticky table header now
+rides directly beneath the sticky budget strip (`top: var(--pin-offset)`),
+measured live by the existing ResizeObserver. Required `border-collapse:
+separate` + `border-spacing: 0` on the board table (visually identical;
+Chromium ignores `position: sticky` on `th` under `collapse`) and
+`.table-scroll { overflow: visible }` + `.board-panel { overflow: clip }` to
+kill the nested scrollport.
+
+Verify: 25/25 logic tests, 21/21 browser scenarios (new assertions: board inner
+overflow 0 at desktop widths; stuck `th` y == pin offset). Production
+`https://benalloway.com/draftkit` 200 with sha256 matching
+`final-draft-kit/5-live-desk.html` (`c2ee1905…`), inner overflow 0, stuck `th`
+y 72 on the live page.
+
+Rollback: `npx wrangler rollback`.
+
+---
+
 
 Change: Added `src/pages/draftkit.ts` serving the Fantrax basketball auction
 draft desk at `https://benalloway.com/draftkit`, byte-identical to
