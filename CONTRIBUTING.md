@@ -25,6 +25,13 @@ GitHub Actions Forge workflow (or gets picked up on the next local run).
 Don't apply it by hand on a guess; grill the spec first (goal, acceptance,
 blocking edges, single scope, no open questions).
 
+**Where does it run?** Triage sets routing alongside `ready-for-agent`
+(see `docs/agents/triage-labels.md`): no routing label (or `run:cloud`) runs
+on cloud Actions automatically; add `run:home` and the home server
+(`thinkcentre-m73`) picks it up instead while cloud skips it. From your
+phone: create the issue from the Agent-task template, grill it, triage to
+`ready-for-agent`, and add `run:home` only if you want the home server.
+
 ## Run the factory (Docker-free local OR GitHub Actions)
 
 ### Option A — On GitHub Actions (zero laptop CPU/RAM)

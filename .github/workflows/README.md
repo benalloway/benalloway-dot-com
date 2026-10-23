@@ -1,14 +1,28 @@
 # Workflows
 
-Two GitHub workflows: `CI` (`ci.yml`) and `Forge` (`forge.yml`, a thin
-wrapper over the reusable `benalloway/forge` factory pinned at `v1`).
+Three GitHub workflows: `CI` (`ci.yml`), `Forge` (`forge.yml`, a thin
+wrapper over the reusable `benalloway/forge` factory pinned at `v1`), and
+`Review` (`review.yml`, a thin wrapper over the reusable
+`benalloway/forge` PR review pinned at `v1`).
 Agents run locally (`npm run forge`) or in Actions via `forge.yml`
 (Docker-free: native git worktrees via `noSandbox()`).
 
 | Workflow | Trigger | Does | Guards |
 |---|---|---|---|
 | `CI` (`ci.yml`) | push to `main`, PRs, manual | `check` + `build`; on `main`: deploy to `benalloway.com` | Required strict-green `build` on `main` |
-| `Forge` (`forge.yml`) | issue labeled `Forge` + `ready-for-agent`, or manual (`npm run forge:gh`) | Runs the vendored `.forge/` factory (`planner` → parallel `implementer` + `reviewer` in git worktrees → `merger`), verifies `check` + `build`, delivers (PR by default) | `concurrency: forge-factory`, `check` + `build` gate before delivery |
+| `Forge` (`forge.yml`) | issue labeled `Forge` + `ready-for-agent` (skips `run:home`), or manual (`npm run forge:gh`) | Runs the vendored `.forge/` factory (`planner` → parallel `implementer` + `reviewer` in git worktrees → `merger`), verifies `check` + `build`, delivers (PR by default) | `concurrency: forge-factory`, `check` + `build` gate before delivery |
+| `Review` (`review.yml`) | PR opened / synchronized | Read-only review agent (standards + vendored prompt), posts one advisory comment, never pushes | Per-PR concurrency (latest push wins), no blocking gate |
+
+## Routing: cloud vs home server
+
+Triage (`ready-for-agent`) decides *whether* a ticket runs; routing labels
+decide *where* (see `docs/agents/triage-labels.md`):
+
+- No routing label (or `run:cloud`) → cloud `forge.yml` picks it up.
+- `run:home` → cloud skips it (job `if:` guard); the home-server runner
+  (`thinkcentre-m73`) polls `Forge` + `ready-for-agent` + `run:home`.
+- Whichever side starts first comments `Claimed by <cloud|home-server>` so
+  the other side sees it before starting.
 
 ## Delivery guarantees
 
